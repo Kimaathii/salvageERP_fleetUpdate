@@ -1,5 +1,5 @@
 <?php
-include('includes/session.php');
+
 $Title = _('Rearing Houses Maintenance');
 $ViewTopic = 'RearingHouses';
 include('includes/header.php');
