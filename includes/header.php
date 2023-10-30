@@ -27,6 +27,7 @@ if (isset($Title) && $Title == _('Copy a BOM to New Item Code')) {
 	<link href="<?php echo $PathPrefix . $RootPath; ?>/css/putup/main.css" rel="stylesheet">
 	<link href="<?php echo $PathPrefix . $RootPath; ?>/css/putup/dataTables/datatables.min.css" rel="stylesheet">
 	<link href="<?php echo $PathPrefix . $RootPath; ?>/css/print.css" rel="stylesheet" type="text/css" media="print" />
+    <link href="css/formhandle/RecordDelete.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
 	<link href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="<?php echo $PathPrefix . $RootPath; ?>/css/putup/assets/icon-fonts/pe-icon-7-stroke/css/helper.css">

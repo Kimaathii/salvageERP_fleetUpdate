@@ -212,6 +212,7 @@ if (isset($Messages) && count($Messages) > 0) {
 <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/metisMenu/1.1.3/metisMenu.min.js"></script>
+<script src="javascripts/RecordDelete.js"></script>
 </body>
 
 </html>

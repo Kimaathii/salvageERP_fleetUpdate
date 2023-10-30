@@ -499,4 +499,5 @@ function UpdateFavourites(e, t) {
 	return false
 }
 
+
 window.onload=initial;

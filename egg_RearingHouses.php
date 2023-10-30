@@ -1,8 +1,13 @@
 <?php
 
+
+include('includes/session.php');
 $Title = _('Rearing Houses Maintenance');
 $ViewTopic = 'RearingHouses';
 include('includes/header.php');
+?>
+<?php
+
 echo '<div class="centre">
     <p class="page_title_text">
         <img src="'.$RootPath.'/css/'.$Theme.'/images/money_add.png" title="' . _('REARING HOUSES MAINTENANCE') . '" alt="" />' . ' ' . $Title . '
@@ -22,12 +27,12 @@ if (isset($_POST['submit'])) {
     $created_by = $_POST['created_by'];
     $date = $_POST['date'];
 
+
     // Validate and sanitize input data as needed
 
     if (isset($_POST['edit_id'])) {
         // Handle edit operation and update the database
         $edit_id = (int)$_POST['edit_id'];
-
         // Write SQL query to update the rearing house
         $sql = "UPDATE rearing_houses SET
                 tag_id = $tag_id,
@@ -42,7 +47,7 @@ if (isset($_POST['submit'])) {
                 date = '$date'
                 WHERE id = $edit_id";
 
-        // Execute the query
+//         Execute the query
         $ErrMsg = _('Error updating rearing house');
         $Result = DB_query($sql, $ErrMsg);
     } else {
@@ -50,11 +55,17 @@ if (isset($_POST['submit'])) {
         // Write SQL query to insert a new rearing house
         $sql = "INSERT INTO rearing_houses (tag_id, rearing_stage, branch_code, location_code, location_name, holding_capacity, contact_for_deliveries, phone, created_by, date)
                 VALUES ($tag_id, '$rearing_stage', '$branch_code', '$location_code', '$location_name', $holding_capacity, '$contact_for_deliveries', '$phone', '$created_by', '$date')";
-
         // Execute the query
         $ErrMsg = _('Error creating rearing house');
         $Result = DB_query($sql, $ErrMsg);
+        echo ('this is the result');
     }
+
+}elseif (isset($_POST['delete'])) {
+    $delete_id = (int)$_POST['delete_id'];
+    $sql = "DELETE FROM rearing_houses WHERE id = $delete_id";
+    $ErrMsg = _('Error deleting rearing house');
+    $Result = DB_query($sql, $ErrMsg);
 }
 
 // List rearing houses
@@ -93,6 +104,23 @@ while ($row = DB_fetch_array($Result)) {
             <td>
                 <a href="?edit_id=' . $row['id'] . '">' . _('Edit') . '</a>
             </td>
+            <td>
+                <form method="POST" action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '" >
+                    <input type="hidden" name="delete_id" value="' . $row['id'] . '">
+                    <input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '">
+                    <button class="btn_hover" type="button" name="delete"  onclick="showConfirmationPopup();">Delete</button>
+                       <div id="confirmationPopup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="hideConfirmationPopup()">&times;</span>
+            <p>Are you sure you want to delete this record?</p>
+            <button class="btn_delete" type="submit" name="delete" onclick="deleteRecord()">Yes, Delete</button>
+            <button onclick="hideConfirmationPopup()">Cancel</button>
+        </div>
+    </div>
+
+    
+                </form>
+            </td>
         </tr>';
 }
 
@@ -123,11 +151,11 @@ if (isset($_GET['edit_id'])) {
     );
 }
 
-echo '<form method="post" action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '">
+echo '<form method="POST" action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '">
 <input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '">
 
 <h3>' . ($editMode ? _('Edit Rearing House') : _('Create Rearing House')) . '</h3>
-<input type="hidden" name="edit_id" value="' . ($editMode ? $edit_id : '') . '">
+<input type="hidden"  value="' . ($editMode ? $edit_id : '') . '">
 <table class="selection">
     <tr>
         <td>' . _('Tag ID') . ':</td>
@@ -196,6 +224,8 @@ echo '</select>
         </td>
     </tr>
 </table>
+
+
 </form>';
 
 
