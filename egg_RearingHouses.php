@@ -6,13 +6,23 @@ $Title = _('Rearing Houses Maintenance');
 $ViewTopic = 'RearingHouses';
 include('includes/header.php');
 ?>
+
 <?php
 
-echo '<div class="centre">
-    <p class="page_title_text">
-        <img src="'.$RootPath.'/css/'.$Theme.'/images/money_add.png" title="' . _('REARING HOUSES MAINTENANCE') . '" alt="" />' . ' ' . $Title . '
-    </p>
-</div>';
+
+
+echo '<div class="centre" style="display: flex; justify-content: space-between">
+        <p class="page_title_text">
+          <img src="'.$RootPath.'/css/'.$Theme.'/images/money_add.png" title="' . _('REARING HOUSES MAINTENANCE') . '" alt="" />' . ' ' . $Title . '
+        </p>
+        <div>
+          <button>Create Record</button>
+        </div>
+        <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  Launch static backdrop modal
+</button>
+      </div>';
 
 // Handle form submissions for creating and editing rearing houses
 if (isset($_POST['submit'])) {
@@ -150,18 +160,17 @@ if (isset($_GET['edit_id'])) {
         'date' => date('Y-m-d'),
     );
 }
-
+ob_start();
 echo '<form method="POST" action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '">
-<input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '">
-
-<h3>' . ($editMode ? _('Edit Rearing House') : _('Create Rearing House')) . '</h3>
-<input type="hidden"  value="' . ($editMode ? $edit_id : '') . '">
-<table class="selection">
+         <input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '">
+         <h3>' . ($editMode ? _('Edit Rearing House') : _('Create Rearing House')) . '</h3>
+         <input type="hidden"  value="' . ($editMode ? $edit_id : '') . '">
+           <table class="selection">
     <tr>
         <td>' . _('Tag ID') . ':</td>
         <td>
             <select name="tag_id">
-                <option value="">Select Branch Code</option>'; // An empty option for a default selection';
+                <option value="">Select Branch Code</option>';
 
 $SQL = "SELECT tagref, tagdescription FROM tags";
 $ErrMsg = _('Error retrieving tag options');
@@ -227,6 +236,29 @@ echo '</select>
 
 
 </form>';
+
+$content = ob_get_clean();
+
+
+$STACKS['modals'][] = '
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+        <button type="button" class="btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close">&times</button>
+      </div>
+      <div class="modal-body">
+        '. $content . '
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>';
 
 
 

@@ -1,4 +1,4 @@
-.popup {
+.popup, .hideForm {
     display: none;
     position: fixed;
     top: 50%;
@@ -27,7 +27,7 @@ button {
     margin: 5px;
     border: none;
 }
-.btn_hover:hover, .btn_hover:active, .btn_delete{
+.btn_delete{
     background-color: darkred;
     border: none;
 

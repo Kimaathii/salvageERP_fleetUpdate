@@ -1,8 +1,11 @@
-<?php
-
-echo '<div id="mask">
+<div id="mask">
 	<div id="dialog"></div>
-</div>';
+</div>
+</div>
+</div>
+</div>
+
+<?php
 
 if (isset($Messages) && count($Messages) > 0) {
 	foreach ($Messages as $Message) {
@@ -37,12 +40,13 @@ if (isset($Messages) && count($Messages) > 0) {
 					fwrite($LogFile, date('Y-m-d h-m-s') . ',' . $Type . ',' . $_SESSION['UserID'] . ',' . trim($Msg, ',') . "\n");
 				}
 		}
-		echo '<div id="MessageContainerFoot">
+        ?>
+		<div id="MessageContainerFoot">
 				<div class="Message ', $Class, ' noPrint">
 					<span class="MessageCloseButton">&times;</span>
-					<b>', $Message[2], '</b> : ', $Message[0], '
+					<b><?= $Message[2] ?></b> : <?= $Message[0] ?>
 				</div>
-			</div>';
+			</div><?php
 	}
 }
 ?>
@@ -201,18 +205,24 @@ if (isset($Messages) && count($Messages) > 0) {
 </div>
 
 
+<?php echo implode("\n", @$STACKS['modals']); ?>
+
 
 <script src="<?php echo $PathPrefix . $RootPath; ?>/css/<?php echo 'putup'; ?>/jquery-3.1.1.min.js"></script>
 <!--<script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 
-<script type="text/javascript" src="ajaxprocessing.js"></script>
+<!--<script type="text/javascript" src="ajaxprocessing.js"></script>-->
 <script type="text/javascript" src="<?php echo $PathPrefix . $RootPath; ?>/css/<?php echo 'putup'; ?>/assets/scripts/main.d810cf0ae7f39f28f336.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <script src="<?php echo $PathPrefix . $RootPath; ?>/css/<?php echo 'putup'; ?>/dataTables/datatables.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/metisMenu/1.1.3/metisMenu.min.js"></script>
 <script src="javascripts/RecordDelete.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 
 </html>
