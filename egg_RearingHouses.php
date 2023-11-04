@@ -5,24 +5,19 @@ include('includes/session.php');
 $Title = _('Rearing Houses Maintenance');
 $ViewTopic = 'RearingHouses';
 include('includes/header.php');
-?>
 
+?>
 <?php
 
-
-
 echo '<div class="centre" style="display: flex; justify-content: space-between">
-        <p class="page_title_text">
-          <img src="'.$RootPath.'/css/'.$Theme.'/images/money_add.png" title="' . _('REARING HOUSES MAINTENANCE') . '" alt="" />' . ' ' . $Title . '
-        </p>
+           <p class="page_title_text">
+           <img src="'.$RootPath.'/css/'.$Theme.'/images/money_add.png" title="' . _('REARING HOUSES MAINTENANCE') . '" alt="" />' . ' ' . $Title . '
+           </p>
         <div>
-          <button>Create Record</button>
+          <input id="submitButton" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-primary" value="Create Record">  
         </div>
-        <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-  Launch static backdrop modal
-</button>
-      </div>';
+      </div>
+';
 
 // Handle form submissions for creating and editing rearing houses
 if (isset($_POST['submit'])) {
@@ -112,19 +107,19 @@ while ($row = DB_fetch_array($Result)) {
             <td>' . $row['created_by'] . '</td>
             <td>' . $row['date'] . '</td>
             <td>
-                <a href="?edit_id=' . $row['id'] . '">' . _('Edit') . '</a>
+                <a href="?edit_id=' . $row['id'] . '" id="editLink" onclick="triggerButtonClick()' . $row['id'] . ')">' . _('Edit') . '</a>  
             </td>
             <td>
-                <form method="POST" action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '" >
+                <form  id="editForm" method="POST" action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '" >
                     <input type="hidden" name="delete_id" value="' . $row['id'] . '">
                     <input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '">
-                    <button class="btn_hover" type="button" name="delete"  onclick="showConfirmationPopup();">Delete</button>
+                    <button class="btn_hover btn-danger" type="button" name="delete"  onclick="showConfirmationPopup()">Delete</button>
                        <div id="confirmationPopup" class="popup">
-        <div class="popup-content">
-            <span class="close" onclick="hideConfirmationPopup()">&times;</span>
-            <p>Are you sure you want to delete this record?</p>
-            <button class="btn_delete" type="submit" name="delete" onclick="deleteRecord()">Yes, Delete</button>
-            <button onclick="hideConfirmationPopup()">Cancel</button>
+                         <div class="popup-content">
+                         <span class="close" onclick="hideConfirmationPopup()">&times;</span>
+                         <p>Are you sure you want to delete this record?</p>
+                         <button class="btn_delete" type="submit" name="delete" onclick="deleteRecord()">Yes, Delete</button>
+                         <button onclick="hideConfirmationPopup()">Cancel</button>
         </div>
     </div>
 
@@ -159,18 +154,30 @@ if (isset($_GET['edit_id'])) {
         'created_by' => '',
         'date' => date('Y-m-d'),
     );
-}
-ob_start();
-echo '<form method="POST" action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '">
-         <input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '">
-         <h3>' . ($editMode ? _('Edit Rearing House') : _('Create Rearing House')) . '</h3>
-         <input type="hidden"  value="' . ($editMode ? $edit_id : '') . '">
-           <table class="selection">
+};
+
+
+echo '
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title fs-5" id="staticBackdropLabel">' . ($editMode ? _('Edit Rearing House') : _('Create Rearing House')) . '</h3>
+        <button type="button" class="btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close" onclick="goBack()">&times</button>
+      </div>
+      <div class="modal-body">
+       <form method="POST" action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '" id="modalForm">
+           <input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '">
+           <input type="hidden"   value="' . ($editMode ? $edit_id : '') . '">
+           
+<table class="selection" >
+
     <tr>
         <td>' . _('Tag ID') . ':</td>
         <td>
             <select name="tag_id">
-                <option value="">Select Branch Code</option>';
+                <option value="">Select Branch Code</option>'; // An empty option for a default selection';
 
 $SQL = "SELECT tagref, tagdescription FROM tags";
 $ErrMsg = _('Error retrieving tag options');
@@ -226,40 +233,25 @@ echo '</select>
         <td>' . _('Date') . ':</td>
         <td><input type="date" name="date" value="' . $editData['date'] . '"></td>
     </tr>
-    <tr>
-        <td></td>
+    <div>
+       <tr>
+        
         <td>
-            <input type="submit" name="submit" value="' . ($editMode ? _('Update') : _('Create')) . '">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="goBack()">Close</button>
+        <input type="submit" class="btn btn-primary" name="submit" value="' . ($editMode ? _('Update') : _('Create')) . '">  
         </td>
     </tr>
-</table>
-
-
-</form>';
-
-$content = ob_get_clean();
-
-
-$STACKS['modals'][] = '
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
-        <button type="button" class="btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close">&times</button>
-      </div>
-      <div class="modal-body">
-        '. $content . '
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
+        
       </div>
     </div>
-  </div>
-</div>';
+</table>
 
+</form>
+      </div>
+     
+  </div>
+</div>
+';
 
 
 include('includes/footer.php');
