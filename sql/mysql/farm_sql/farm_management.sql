@@ -43,44 +43,44 @@ INSERT INTO `scripts` VALUES ('egg_AllocateApprovedInventoryItems.php', 15, 'All
 
 
 CREATE TABLE rearing_houses (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    tag_id tinyint,
-    rearing_stage ENUM('BROODING PHASE', 'REARING PHASE', 'PRODUCTION PHASE'),
-    branch_code VARCHAR(255),
-    location_code VARCHAR(255),
-    location_name VARCHAR(255),
-    holding_capacity INT,
-    contact_for_deliveries VARCHAR(255),
-    phone VARCHAR(20),
-    created_by VARCHAR(255),
-    date DATE,
-    FOREIGN KEY (tag_id) REFERENCES tags(tagref)
+                                id INT AUTO_INCREMENT PRIMARY KEY,
+                                tag_id tinyint,
+                                rearing_stage ENUM('BROODING PHASE', 'REARING PHASE', 'PRODUCTION PHASE'),
+                                branch_code VARCHAR(255),
+                                location_code VARCHAR(255),
+                                location_name VARCHAR(255),
+                                holding_capacity INT,
+                                contact_for_deliveries VARCHAR(255),
+                                phone VARCHAR(20),
+                                created_by VARCHAR(255),
+                                date DATE,
+                                FOREIGN KEY (tag_id) REFERENCES tags(tagref)
 );
 
 CREATE TABLE poultry_stage_expenses (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    rearing_stage ENUM('BROODING PHASE', 'REARING PHASE', 'PRODUCTION PHASE', 'ALL PHASE'),
-    category_id INT,
-    created_by VARCHAR(255),
-    date DATE,
-    FOREIGN KEY (category_id) REFERENCES stockcategory(categoryid)
+                                        id INT AUTO_INCREMENT PRIMARY KEY,
+                                        rearing_stage ENUM('BROODING PHASE', 'REARING PHASE', 'PRODUCTION PHASE', 'ALL PHASE'),
+                                        category_id INT,
+                                        created_by VARCHAR(255),
+                                        date DATE,
+                                        FOREIGN KEY (category_id) REFERENCES stockcategory(categoryid)
 );
 
 CREATE TABLE vaccination_schedules (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    age_in_days INT,
-    age_in_weeks INT,
-    is_in_days BOOLEAN,
-    from_day ENUM('DAY 1', 'DAY 2', 'DAY 3', 'DAY 4', 'DAY 5', 'DAY 6', 'DAY 7', 'DAY 8', 'DAY 9', 'DAY 10', 'DAY 11', 'DAY 12', 'DAY 13', 'DAY 14', 'DAY 15', 'DAY 16', 'DAY 17', 'DAY 18', 'DAY 19', 'DAY 20', 'DAY 21', 'DAY 22', 'DAY 23', 'DAY 24', 'DAY 25', 'DAY 26', 'DAY 27', 'DAY 28', 'DAY 29', 'DAY 30'),
-    to_day ENUM('DAY 1', 'DAY 2', 'DAY 3', 'DAY 4', 'DAY 5', 'DAY 6', 'DAY 7', 'DAY 8', 'DAY 9', 'DAY 10', 'DAY 11', 'DAY 12', 'DAY 13', 'DAY 14', 'DAY 15', 'DAY 16', 'DAY 17', 'DAY 18', 'DAY 19', 'DAY 20', 'DAY 21', 'DAY 22', 'DAY 23', 'DAY 24', 'DAY 25', 'DAY 26', 'DAY 27', 'DAY 28', 'DAY 29', 'DAY 30'),
-    is_in_weeks BOOLEAN,
-    week_from ENUM('WEEK 1', 'WEEK 2', 'WEEK 3', 'WEEK 4', 'WEEK 5', 'WEEK 6', 'WEEK 7'),
-    week_to ENUM('WEEK 1', 'WEEK 2', 'WEEK 3', 'WEEK 4', 'WEEK 5', 'WEEK 6', 'WEEK 7'),
-    disease_name VARCHAR(255),
-    vaccine_name VARCHAR(255),
-    route_delivery_method VARCHAR(255),
-    alert_user_id INT,
-    created_by VARCHAR(255),
-    date DATE,
-    FOREIGN KEY (alert_user_id) REFERENCES www_users(userid)
+                                       id INT AUTO_INCREMENT PRIMARY KEY,
+                                       age_in_days INT,
+                                       age_in_weeks INT,
+                                       is_in_days BOOLEAN,
+                                       from_day ENUM('DAY 1', 'DAY 2', 'DAY 3', 'DAY 4', 'DAY 5', 'DAY 6', 'DAY 7', 'DAY 8', 'DAY 9', 'DAY 10', 'DAY 11', 'DAY 12', 'DAY 13', 'DAY 14', 'DAY 15', 'DAY 16', 'DAY 17', 'DAY 18', 'DAY 19', 'DAY 20', 'DAY 21', 'DAY 22', 'DAY 23', 'DAY 24', 'DAY 25', 'DAY 26', 'DAY 27', 'DAY 28', 'DAY 29', 'DAY 30'),
+                                       to_day ENUM('DAY 1', 'DAY 2', 'DAY 3', 'DAY 4', 'DAY 5', 'DAY 6', 'DAY 7', 'DAY 8', 'DAY 9', 'DAY 10', 'DAY 11', 'DAY 12', 'DAY 13', 'DAY 14', 'DAY 15', 'DAY 16', 'DAY 17', 'DAY 18', 'DAY 19', 'DAY 20', 'DAY 21', 'DAY 22', 'DAY 23', 'DAY 24', 'DAY 25', 'DAY 26', 'DAY 27', 'DAY 28', 'DAY 29', 'DAY 30'),
+                                       is_in_weeks BOOLEAN,
+                                       week_from ENUM('WEEK 1', 'WEEK 2', 'WEEK 3', 'WEEK 4', 'WEEK 5', 'WEEK 6', 'WEEK 7'),
+                                       week_to ENUM('WEEK 1', 'WEEK 2', 'WEEK 3', 'WEEK 4', 'WEEK 5', 'WEEK 6', 'WEEK 7'),
+                                       disease_name VARCHAR(255),
+                                       vaccine_name VARCHAR(255),
+                                       route_delivery_method VARCHAR(255),
+                                       alert_user_id INT,
+                                       created_by VARCHAR(255),
+                                       date DATE,
+                                       FOREIGN KEY (alert_user_id) REFERENCES www_users(userid)
 );

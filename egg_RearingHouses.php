@@ -5,15 +5,20 @@ include('includes/session.php');
 $Title = _('Rearing Houses Maintenance');
 $ViewTopic = 'RearingHouses';
 include('includes/header.php');
+
 ?>
 <?php
-
-echo '<div class="centre">
-    <p class="page_title_text">
-        <img src="'.$RootPath.'/css/'.$Theme.'/images/money_add.png" title="' . _('REARING HOUSES MAINTENANCE') . '" alt="" />' . ' ' . $Title . '
-    </p>
-</div>';
-
+  echo '<div class="centre" style="display: flex; justify-content: space-between">
+          <p class="page_title_text">
+            <img src="'.$RootPath.'/css/'.$Theme.'/images/money_add.png" title="' . _('REARING HOUSES MAINTENANCE') . '" alt="" />' . ' ' . $Title . '
+          </p>
+          <div>
+            <input id="submitButton" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-primary" value="Create Record" >  
+          </div>
+       </div>
+';
+echo '<input type="text" id="searchInput" placeholder="Search Records...">
+';
 // Handle form submissions for creating and editing rearing houses
 if (isset($_POST['submit'])) {
     $tag_id = (int)$_POST['tag_id'];
@@ -29,10 +34,12 @@ if (isset($_POST['submit'])) {
 
 
     // Validate and sanitize input data as needed
-
-    if (isset($_POST['edit_id'])) {
+     $editedID = isset($_POST['edit_id']);
+     if($editedID) {
         // Handle edit operation and update the database
-        $edit_id = (int)$_POST['edit_id'];
+        $edit_id = (int)$editedID;
+
+
         // Write SQL query to update the rearing house
         $sql = "UPDATE rearing_houses SET
                 tag_id = $tag_id,
@@ -47,10 +54,10 @@ if (isset($_POST['submit'])) {
                 date = '$date'
                 WHERE id = $edit_id";
 
-//         Execute the query
+        //Execute the query
         $ErrMsg = _('Error updating rearing house');
         $Result = DB_query($sql, $ErrMsg);
-    } else {
+    } else{
         // Handle create operation and insert into the database
         // Write SQL query to insert a new rearing house
         $sql = "INSERT INTO rearing_houses (tag_id, rearing_stage, branch_code, location_code, location_name, holding_capacity, contact_for_deliveries, phone, created_by, date)
@@ -58,7 +65,6 @@ if (isset($_POST['submit'])) {
         // Execute the query
         $ErrMsg = _('Error creating rearing house');
         $Result = DB_query($sql, $ErrMsg);
-        echo ('this is the result');
     }
 
 }elseif (isset($_POST['delete'])) {
@@ -69,52 +75,90 @@ if (isset($_POST['submit'])) {
 }
 
 // List rearing houses
-$SQL = "SELECT id, tag_id, rearing_stage, branch_code, location_code, location_name, holding_capacity, contact_for_deliveries, phone, created_by, date
-        FROM rearing_houses";
-$ErrMsg = _('Error retrieving rearing houses');
-$Result = DB_query($SQL, $ErrMsg);
+//$SQL = "SELECT id, tag_id, rearing_stage, branch_code, location_code, location_name, holding_capacity, contact_for_deliveries, phone, created_by, date
+//        FROM rearing_houses";
+//$ErrMsg = _('Error retrieving rearing houses');
+//$Result = DB_query($SQL, $ErrMsg);
 
-echo '<table class="selection">';
-echo '<tr>
-        <th>' . _('Tag ID') . '</th>
+$recordsPerPage = 5;
+
+// Get the current page from the query parameter
+$currentPage = isset($_GET['page']) ? max(1, $_GET['page']) : 1;
+//echo $currentPage;
+// Calculate the offset for the SQL query
+$offset = ($currentPage - 1) * $recordsPerPage;
+
+// Modify your SQL query to include LIMIT and OFFSET
+$sql = "SELECT * FROM rearing_houses ORDER BY id DESC LIMIT $recordsPerPage OFFSET $offset";
+$Result = DB_query($sql);
+
+//if ($Result) {
+//    echo "<script>
+//            window.location.href='. $currentPage . ';
+//          </script>";
+//} else {
+//    // Handle error
+//}
+
+
+// Calculate total number of pages
+$totalRecord = "SELECT COUNT(*) FROM rearing_houses";
+$totalRecords = DB_query($totalRecord);
+$row = mysqli_fetch_row($totalRecords);
+$totalRecords = $row[0];
+//echo $totalRecords;
+
+//echo $totalRecords;
+
+
+
+ // Get the total number of records from your database
+$totalPages = ceil($totalRecords / $recordsPerPage);
+
+//echo $totalPages;
+
+
+echo '<table id="selected">
+<tr>
+        <th style="display: none" >' . _('Tag ID') . '</th>
         <th>' . _('Rearing Stage') . '</th>
-        <th>' . _('Branch Code') . '</th>
+        <th style="display: none">' . _('Branch Code') . '</th>
         <th>' . _('Location Code') . '</th>
         <th>' . _('Location Name') . '</th>
         <th>' . _('Holding Capacity') . '</th>
         <th>' . _('Contact for Deliveries') . '</th>
         <th>' . _('Phone') . '</th>
-        <th>' . _('Created By') . '</th>
-        <th>' . _('Date') . '</th>
+        <th style="display: none">' . _('Created By') . '</th>
+        <th style="display: none">' . _('Date') . '</th>
         <th></th>
     </tr>';
 
 while ($row = DB_fetch_array($Result)) {
     echo '<tr>
-            <td>' . $row['tag_id'] . '</td>
-            <td>' . $row['rearing_stage'] . '</td>
-            <td>' . $row['branch_code'] . '</td>
+            <td style="display: none" id="tag">' . $row['tag_id'] . '</td>
+            <td><a href="#" class="details">' . $row['rearing_stage'] . '</a></td>
+            <td style="display: none" id="branch">' . $row['branch_code'] . '</td>
             <td>' . $row['location_code'] . '</td>
             <td>' . $row['location_name'] . '</td>
             <td>' . $row['holding_capacity'] . '</td>
             <td>' . $row['contact_for_deliveries'] . '</td>
             <td>' . $row['phone'] . '</td>
-            <td>' . $row['created_by'] . '</td>
-            <td>' . $row['date'] . '</td>
+            <td style="display: none" id="create">' . $row['created_by'] . '</td>
+            <td style="display: none" id="date">' . $row['date'] . '</td>
             <td>
-                <a href="?edit_id=' . $row['id'] . '">' . _('Edit') . '</a>
+                <a href="?edit_id=' . $row['id'] . '&page=' . $currentPage .  '" id="editLink" onclick="triggerButtonClick();">' . _('Edit') . '</a>  
             </td>
             <td>
-                <form method="POST" action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '" >
+                <form  id="editForm" method="POST" action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '" >
                     <input type="hidden" name="delete_id" value="' . $row['id'] . '">
                     <input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '">
-                    <button class="btn_hover" type="button" name="delete"  onclick="showConfirmationPopup();">Delete</button>
+                    <button class="btn_hover btn-danger" type="button" name="delete"  onclick="showConfirmationPopup()">Delete</button>
                        <div id="confirmationPopup" class="popup">
-        <div class="popup-content">
-            <span class="close" onclick="hideConfirmationPopup()">&times;</span>
-            <p>Are you sure you want to delete this record?</p>
-            <button class="btn_delete" type="submit" name="delete" onclick="deleteRecord()">Yes, Delete</button>
-            <button onclick="hideConfirmationPopup()">Cancel</button>
+                         <div class="popup-content">
+                         <span class="close" onclick="hideConfirmationPopup()">&times;</span>
+                         <p>Are you sure you want to delete this record?</p>
+                         <button class="btn_delete" type="submit" name="delete" onclick="deleteRecord()">Yes, Delete</button>
+                         <button onclick="hideConfirmationPopup()">Cancel</button>
         </div>
     </div>
 
@@ -122,9 +166,37 @@ while ($row = DB_fetch_array($Result)) {
                 </form>
             </td>
         </tr>';
+
+}
+echo '</table>';
+
+
+// Display the pagination controls
+echo '<div id="pagination">';
+if ($currentPage > 1) {
+    echo '<a href="?page=1" class="button-like-link">First</a>';
+    echo '<a href="?page=' . ($currentPage - 1) . '" class="button-like-link">Previous</a>';
 }
 
-echo '</table>';
+// Display previous page numbers
+for ($i = max(1, $currentPage - 3); $i < $currentPage; $i++) {
+    echo '<a href="?page=' . $i . '" class="button-like-link">' . $i . '</a>';
+}
+
+// Display current page number
+echo '<span class="current-page">' . $currentPage . '</span>';
+
+// Display next page numbers
+for ($i = $currentPage + 1; $i <= min($totalPages, $currentPage + 3); $i++) {
+    echo '<a href="?page=' . $i . '" class="button-like-link">' . $i . '</a>';
+}
+
+if ($currentPage < $totalPages) {
+    echo '<a href="?page=' . ($currentPage + 1) . '" class="button-like-link">Next</a>';
+    echo '<a href="?page=' . $totalPages . '" class="button-like-link">Last</a>';
+}
+echo '</div>';
+
 
 // Create or edit rearing house form
 if (isset($_GET['edit_id'])) {
@@ -149,14 +221,26 @@ if (isset($_GET['edit_id'])) {
         'created_by' => '',
         'date' => date('Y-m-d'),
     );
-}
+};
 
-echo '<form method="POST" action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '">
-<input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '">
 
-<h3>' . ($editMode ? _('Edit Rearing House') : _('Create Rearing House')) . '</h3>
-<input type="hidden"  value="' . ($editMode ? $edit_id : '') . '">
-<table class="selection">
+echo '
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title fs-5" id="staticBackdropLabel">' . ($editMode ? _('Edit Rearing House') : _('Create Rearing House')) . '</h3>
+        <button type="button" class="btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close" onclick="goBack()">&times</button>
+      </div>
+      <div class="modal-body">
+       <form method="POST" action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '" id="modalForm">
+           <input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '">
+           <input type="hidden"  name="edit_id" value="' . ($editMode ? $edit_id : '') . '">
+ 
+           
+<table class="selection "  >
+
     <tr>
         <td>' . _('Tag ID') . ':</td>
         <td>
@@ -217,17 +301,25 @@ echo '</select>
         <td>' . _('Date') . ':</td>
         <td><input type="date" name="date" value="' . $editData['date'] . '"></td>
     </tr>
-    <tr>
-        <td></td>
+    <div>
+       <tr>
+        
         <td>
-            <input type="submit" name="submit" value="' . ($editMode ? _('Update') : _('Create')) . '">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="goBack()">Close</button>
+        <input type="submit" class="btn btn-primary" onclick="retrievePage()" name="submit" value="' . ($editMode ? _('Update') : _('Create')) . '">  
         </td>
     </tr>
+        
+      </div>
+    </div>
 </table>
 
-
-</form>';
-
+</form>
+      </div>
+     
+  </div>
+</div>
+';
 
 
 include('includes/footer.php');

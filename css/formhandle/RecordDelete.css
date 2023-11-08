@@ -1,4 +1,16 @@
-.popup {
+.modal {
+    z-index: 1000;
+}
+.modal-backdrop, .blockOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+}
+.popup, .hideForm {
     display: none;
     position: fixed;
     top: 50%;
@@ -27,8 +39,15 @@ button {
     margin: 5px;
     border: none;
 }
-.btn_hover:hover, .btn_hover:active, .btn_delete{
+.btn_delete {
     background-color: darkred;
     border: none;
 
 }
+/*search bar */
+
+
+/* Add your own custom styles as needed */
+
+
+
