@@ -14,57 +14,70 @@ function deleteRecord() {
     // Proceed with form submission for delete
     document.forms[0].submit();
 }
-
-// let button = document.getElementById('submitButton');
-// button.disabled = true;
-// setTimeout(function () {
-//     button.disabled = false;
-// },100)
-//
-//
-// function triggerButtonClick() {
-//     let linkHtml = document.getElementById('editLink');
-//     console.log(linkHtml.href);
-//     var url = new URL(linkHtml.href);
-//     var params = new URLSearchParams(url.search);
-//     var paramValue = params.get("edit_id");
-//     console.log(paramValue);
-//     console.log(typeof (paramValue));
-//     if(linkHtml.href.includes(paramValue)){
-//         button.click();
-//         console.log('complete url')
-//     }
-//
-// }
-//
-
-
 document.addEventListener("DOMContentLoaded", function() {
     let button = document.getElementById('submitButton');
-    var currentURL = window.location.href;
-    console.log(currentURL);
-    console.log(currentURL.slice(-2))
-   let id = Number(currentURL.slice(-2))
-    console.log(id)
-    // console.log(typeof (id))
-    // console.log(Number.isInteger(id));
-    if (Number.isInteger(id)) {
+    //acquire the url of the present page
+    let currentURL = window.location.href;
+
+    let verifyEditMode = currentURL.includes('edit_id=')
+    if (verifyEditMode) {
         function triggerButtonClick() {
-            console.log("Condition is true. This code will execute.");
             button.click();
         }
+        //make function globally available in DOM
         window.triggerButtonClick = triggerButtonClick
 
+    }else {
+        //run when there is not edited id
+        document.getElementsByName('edit_id')[0].disabled = true;
     }
+    //delay automatic trigger of the edit button so edited data can be available on form fields this after page is reloaded
     setTimeout(triggerButtonClick, 50)
+
 });
+//reload page to initial url when user click close or cancel
 function goBack() {
     window.location.href = "http://savegeerp.test/egg_RearingHouses.php";
 }
-
-// console.log(id)
-// function triggerButtonClick() {
+// function retrievePage() {
+//     window.goBack()
 // }
-// setTimeout(triggerButtonClick, 50);
 
+//search bar for table
+document.getElementById('searchInput').addEventListener('input', function() {
+    let searchValue = this.value.toLowerCase();
+    let rows = document.querySelectorAll('#selected tbody tr');
 
+//iterate over table rows to for items
+    rows.forEach(function(row) {
+        let cells = row.getElementsByTagName('td');
+        let visible = false;
+
+        for (let i = 0; i < cells.length; i++) {
+            let cellValue = cells[i].textContent.toLowerCase();
+
+            if (cellValue.includes(searchValue)) {
+                visible = true;
+                break;
+            }
+        }
+
+        if (visible) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+// let tag_id = document.getElementById('tag');
+// let branch = document.getElementById('branch');
+// let create = document.getElementById('create');
+// let date = document.getElementById('date');
+// let showDetailsOnTable = document.querySelector('.details')
+// showDetailsOnTable.addEventListener('mousedown', function (){
+//     tag_id.style.display = 'block'
+//     branch.style.display = 'block'
+//     create.style.display = 'block'
+//     date.style.display = 'block'
+//
+// })

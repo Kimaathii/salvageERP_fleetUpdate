@@ -30,6 +30,7 @@ if (isset($Title) && $Title == _('Copy a BOM to New Item Code')) {
         <link href="<?php echo $PathPrefix . $RootPath; ?>/css/print.css" rel="stylesheet" type="text/css" media="print" />
         <link href="css/formhandle/RecordDelete.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384H7x7lv6dJjfFDlJZy4cP6CJ9xL4hmGffZbAfx2Cgl4JwZPOXOmYfh0FJfRg" crossorigin="anonymous">
         <link href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css" rel="stylesheet">
         <link rel="stylesheet" href="<?php echo $PathPrefix . $RootPath; ?>/css/putup/assets/icon-fonts/pe-icon-7-stroke/css/helper.css">
@@ -292,7 +293,48 @@ if (isset($Title) && $Title == _('Copy a BOM to New Item Code')) {
             .modal-backdrop {
                 background-color: rgba(0, 0, 0, 0.5); /* This sets the color and opacity of the overlay */
             }
+            .button-like-link {
+                display: inline-block;
+                padding: 6px 16px;
+                font-size: 14px;
+                font-weight: bold;
+                text-align: center;
+                text-decoration: none;
+                cursor: pointer;
+                border: 1px solid #ccc;
+                background-color: #f9f9f9;
+                color: #333;
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
+            }
 
+            .button-like-link:hover {
+                background-color: #ddd;
+            }
+            .current-page {
+                display: inline-block;
+                padding: 8px 6px;
+                background-color: #007BFF;
+                color: #FFFFFF;
+                border-radius: 5px;
+                font-weight: bold;
+                text-decoration: none;
+                margin: 0 5px;
+                font-size: 24px;
+                font-weight: bold;
+                color: black; /* You can change the color to your preference */
+                /* Add any other styles you want to apply to the current page number */
+            }
+            .search-container {
+                 margin: 20px;
+             }
+
+            #searchInput {
+                width: 200px;
+                padding: 5px;
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
         </style>
         <?php
         if ($_SESSION['ShowPageHelp'] == 0) {
