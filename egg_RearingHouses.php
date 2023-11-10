@@ -74,6 +74,46 @@ if (isset($_POST['submit'])) {
     $Result = DB_query($sql, $ErrMsg);
 }
 
+if (isset($_GET['rearing_stage_id'])) {
+    $selectedRearingStageID = (int)$_GET['rearing_stage_id'];
+
+    // Example: Fetch data associated with the selected ID
+    $SQL = "SELECT * FROM rearing_houses WHERE id = $selectedRearingStageID";
+    $ErrMsg = _('Error retrieving rearing house data for the selected ID');
+    $Result = DB_query($SQL, $ErrMsg);
+
+    if ($Result) {
+        $selectedRearingStageData = DB_fetch_array($Result);
+
+        // Extract specific fields
+        $fields = array('id', 'tag_id', 'rearing_stage', 'branch_code', 'location_name', 'location_code', 'holding_capacity', 'contact_for_deliveries', 'phone', 'created_by', 'date');
+
+        // Display the extracted fields in a table with headers and data
+        echo '<table  id="expandTable" border="1">';
+        echo '<div id="cancel"><button onclick="removeTable()" class="btn-danger">&times;</button></div>';
+
+        // Table head
+        echo '<thead><tr>';
+        foreach ($fields as $field) {
+            echo '<th>' . $field . '</th>';
+        }
+        echo '</tr></thead>';
+
+        // Table body (data)
+        echo '<tbody><tr>';
+        foreach ($fields as $field) {
+            echo '<td>' . $selectedRearingStageData[$field] . '</td>';
+        }
+        echo '</tr></tbody>';
+
+        echo '</table>';
+    } else {
+        echo 'Error: Unable to retrieve data for the selected ID';
+    }
+}
+
+
+
 // List rearing houses
 //$SQL = "SELECT id, tag_id, rearing_stage, branch_code, location_code, location_name, holding_capacity, contact_for_deliveries, phone, created_by, date
 //        FROM rearing_houses";
@@ -136,7 +176,7 @@ echo '<table id="selected">
 while ($row = DB_fetch_array($Result)) {
     echo '<tr>
             <td style="display: none" id="tag">' . $row['tag_id'] . '</td>
-            <td><a href="#" class="details">' . $row['rearing_stage'] . '</a></td>
+            <td><a href="?rearing_stage_id=' . $row['id'] . '" class="details">' . $row['rearing_stage'] . '</a></td>
             <td style="display: none" id="branch">' . $row['branch_code'] . '</td>
             <td>' . $row['location_code'] . '</td>
             <td>' . $row['location_name'] . '</td>

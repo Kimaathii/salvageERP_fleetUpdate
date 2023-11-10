@@ -70,14 +70,26 @@ document.getElementById('searchInput').addEventListener('input', function() {
     });
 });
 // let tag_id = document.getElementById('tag');
-// let branch = document.getElementById('branch');
-// let create = document.getElementById('create');
-// let date = document.getElementById('date');
-// let showDetailsOnTable = document.querySelector('.details')
-// showDetailsOnTable.addEventListener('mousedown', function (){
-//     tag_id.style.display = 'block'
-//     branch.style.display = 'block'
-//     create.style.display = 'block'
-//     date.style.display = 'block'
-//
-// })
+
+    function showDetails(recordId) {
+    // Make an AJAX request to retrieve the details for the clicked record
+    // Replace "your_php_script.php" with the actual script that fetches record details
+    var url = 'your_php_script.php?rearing_stage_id=' + recordId;
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+    // Create a container element for the details
+    var container = document.createElement('div');
+    container.innerHTML = xhr.responseText;
+
+    // Append the container to the document body or another suitable location
+    document.body.appendChild(container);
+}
+};
+
+    xhr.open('GET', url, true);
+    xhr.send();
+}
+
+
