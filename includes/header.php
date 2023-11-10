@@ -39,7 +39,10 @@ if (isset($Title) && $Title == _('Copy a BOM to New Item Code')) {
         <script>
             localStorage.setItem("DateFormat", "<?php echo $_SESSION['DefaultDateFormat']; ?>");
             localStorage.setItem("Theme", "<?php echo $_SESSION['Theme']; ?>");
-
+            function removeTable(){
+                document.getElementById('expandTable').style.display = 'none'
+                document.getElementById('cancel').style.display = 'none'
+            }
         </script>
         <style type="text/css">
             /* DATATABLES */
@@ -322,8 +325,7 @@ if (isset($Title) && $Title == _('Copy a BOM to New Item Code')) {
                 margin: 0 5px;
                 font-size: 24px;
                 font-weight: bold;
-                color: black; /* You can change the color to your preference */
-                /* Add any other styles you want to apply to the current page number */
+                color: black;
             }
             .search-container {
                  margin: 20px;
@@ -334,6 +336,20 @@ if (isset($Title) && $Title == _('Copy a BOM to New Item Code')) {
                 padding: 5px;
                 font-size: 16px;
                 margin-bottom: 10px;
+            }
+            #cancel{
+                display: flex;
+
+                justify-content: end;
+            }
+            #cancel >button{
+                /*padding: 10px;*/
+                /*background-color: #e74c3c; !* Red background color *!*/
+                color: #fff; /* White text color */
+                border: none;
+                border-radius: 50%;
+                cursor: pointer;
+                font-size: 16px;
             }
         </style>
         <?php
