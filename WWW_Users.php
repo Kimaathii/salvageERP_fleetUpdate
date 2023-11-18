@@ -329,7 +329,8 @@ if(isset($_POST['submit'])) {
 	}
 
 }
-
+echo $_SESSION['UserName'];
+echo $_SESSION['UserID'];
 if(!isset($SelectedUser)) {
 
 /* If its the first time the page has been displayed with no parameters then none of the above are true and the list of Users will be displayed with links to delete or edit each. These will call the same page again and allow update/input or deletion of the records*/

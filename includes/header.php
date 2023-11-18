@@ -42,6 +42,7 @@ if (isset($Title) && $Title == _('Copy a BOM to New Item Code')) {
             function removeTable(){
                 document.getElementById('expandTable').style.display = 'none'
                 document.getElementById('cancel').style.display = 'none'
+                goBack();
             }
         </script>
         <style type="text/css">
@@ -353,6 +354,7 @@ if (isset($Title) && $Title == _('Copy a BOM to New Item Code')) {
             }
         </style>
         <?php
+
         if ($_SESSION['ShowPageHelp'] == 0) {
             echo '<link href="' . $PathPrefix . $RootPath . '/css/' . 'putup' . '/page_help_off.css" rel="stylesheet" type="text/css" media="screen" />';
         } else {
@@ -512,7 +514,7 @@ if (isset($Title) && $Title == _('Copy a BOM to New Item Code')) {
                     <div class="dropdown">
                         <button type="button" data-toggle="dropdown" class="p-0 mr-2 btn btn-link"
                                 aria-expanded="false">
-						<span class="icon-wrapper icon-wrapper-alt rounded-circle">try
+						<span class="icon-wrapper icon-wrapper-alt rounded-circle">
 							<span class="icon-wrapper-bg bg-focus"></span>
 							<span class="language-icon opacity-8 flag large NG"></span>
 						</span>
@@ -532,8 +534,8 @@ if (isset($Title) && $Title == _('Copy a BOM to New Item Code')) {
                                 </div>
                             </div>
                             <div class="widget-content-left  ml-3 header-user-info">
-                                <div class="widget-heading"><?php echo stripslashes($_SESSION['UsersRealName']); ?> </div>
-                                <div class="widget-subheading">admin </div>
+                                <div class="widget-heading"><?php echo stripslashes($_SESSION['UserID']); ?> </div>
+<!--                                <div class="widget-subheading">--><?php //echo stripslashes($_SESSION['UserID']); ?><!-- </div>-->
                             </div>
                         </div>
                     </div>
