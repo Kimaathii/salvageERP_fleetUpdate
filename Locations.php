@@ -12,6 +12,26 @@ echo '<p class="page_title_text"><img alt="" src="', $RootPath, '/css/', $Theme,
 	_('Location Maintenance'), '</p>';// Page title.
 
 include('includes/CountriesArray.php');
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+	// Retrieve form data using $_POST superglobal
+
+	$cashsalecustomer = $_POST['CashSaleCustomer'];
+	$cashsalebranch = $_POST['CashSaleBranch'];
+	// Echo the form data for debugging purposes
+	echo "cashsalecustomer: " . $cashsalecustomer . "<br>";
+	echo "cashsalebranch: " . $cashsalebranch . "<br>";
+
+	// Note: In a production environment, you wouldn't want to echo sensitive information.
+	// This is just for testing and debugging.
+
+	// Now you can use $username and $password as needed
+	// For example, you can insert them into a database, perform validation, etc.
+	// ...
+
+	// After processing, you might want to redirect the user to another page
+	// header("Location: success.php");
+	// exit();
+}
 
 if(isset($_GET['SelectedLocation'])) {
 	$SelectedLocation = $_GET['SelectedLocation'];
@@ -20,6 +40,7 @@ if(isset($_GET['SelectedLocation'])) {
 }
 
 if(isset($_POST['submit'])) {
+	//echo 'form submitted';
 	$_POST['Managed']='off';
 	//initialise no input errors assumed initially before we test
 	$InputError = 0;
