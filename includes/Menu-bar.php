@@ -117,6 +117,8 @@
                 </div>
             </div>
 
+            <div id="app_messages_dropzone"></div>
+
             <div class="main-card mb-3 card"><div class="card-body">
 
 

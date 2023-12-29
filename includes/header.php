@@ -36,6 +36,7 @@ if (isset($Title) && $Title == _('Copy a BOM to New Item Code')) {
         <link rel="stylesheet" href="<?php echo $PathPrefix . $RootPath; ?>/css/putup/assets/icon-fonts/pe-icon-7-stroke/css/helper.css">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script async type="text/javascript" src="<?php echo $PathPrefix . $RootPath; ?>/javascripts/MiscFunctions.js"></script>
+        <script async src="<?= cache_bust('/assets/js/image-uploader.js') ?>"></script>
         <script>
             localStorage.setItem("DateFormat", "<?php echo $_SESSION['DefaultDateFormat']; ?>");
             localStorage.setItem("Theme", "<?php echo $_SESSION['Theme']; ?>");
@@ -372,7 +373,7 @@ if (isset($Title) && $Title == _('Copy a BOM to New Item Code')) {
 <div class="app-container app-theme-white body-tabs-shadow fixed-header fixed-sidebar">
     <div class="app-header header-shadow bg-night-sky header-text-light">
         <div class="app-header__logo">
-            <div class=""><img alt="<?php echo stripslashes($_SESSION['CompanyRecord']['coyname']); ?>" src="<?php echo $RootPath; ?>/<?php echo $_SESSION['LogoFile']; ?>"
+            <div class=""><img alt="<?php echo stripslashes($_SESSION['CompanyRecord']['coyname']); ?>" src="<?php echo $_SESSION['UserImage'] ?? "$RootPath/{$_SESSION['LogoFile']}" ?>"
                                title="<?php echo stripslashes($_SESSION['CompanyRecord']['coyname']); ?>" style="width:50px; border-radius:50%; float:left;" /></div>
             <div class="header__pane ml-auto">
                 <div>
@@ -528,13 +529,13 @@ if (isset($Title) && $Title == _('Copy a BOM to New Item Code')) {
                                 <div class="btn-group">
                                     <a href="<?php echo $PathPrefix . $RootPath; ?>/UserSettings.php" title="<?php echo _('Change the settings for') . ' ' . $_SESSION['UsersRealName']; ?>"
                                        class="p-0 btn">
-                                        <img width="42" class="rounded-circle" src="/css/putup/assets/images/user.png"
+                                           <img width="42" class="rounded-circle" src="<?php echo $_SESSION['UserImage'] ?? '/css/putup/assets/images/user.png' ?>"
                                              alt="">
                                     </a>
                                 </div>
                             </div>
                             <div class="widget-content-left  ml-3 header-user-info">
-                                <div class="widget-heading"><?php echo stripslashes($_SESSION['UserID']); ?> </div>
+                                <div class="widget-heading"><?php echo stripslashes($_SESSION['UsersRealName']); ?> </div>
 <!--                                <div class="widget-subheading">--><?php //echo stripslashes($_SESSION['UserID']); ?><!-- </div>-->
                             </div>
                         </div>

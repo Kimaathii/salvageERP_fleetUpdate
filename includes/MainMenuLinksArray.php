@@ -1,8 +1,8 @@
 <?php
 /* SavageERP menus with Captions and URLs. */
 
-$ModuleLink = array('Sales', 'AR', 'PO', 'AP', 'stock', 'manuf', 'FarmManagement', 'GL', 'FA', 'PC', 'system', 'Utilities', 'test');
-$ReportList = array('Sales' => 'ord', 'AR' => 'ar', 'PO' => 'prch', 'AP' => 'ap', 'stock' => 'inv', 'manuf' => 'man', 'FarmManagement' => 'farmmanagement', 'GL' => 'gl', 'FA' => 'fa', 'PC' => 'pc', 'system' => 'sys', 'Utilities' => 'utils');
+$ModuleLink = array('Sales', 'AR', 'PO', 'AP', 'stock', 'manuf', 'GL', 'FA', 'PC', 'system', 'Utilities', 'test');
+$ReportList = array('Sales' => 'ord', 'AR' => 'ar', 'PO' => 'prch', 'AP' => 'ap', 'stock' => 'inv', 'manuf' => 'man', 'GL' => 'gl', 'FA' => 'fa', 'PC' => 'pc', 'system' => 'sys', 'Utilities' => 'utils');
 
 /*The headings showing on the tabs across the main index used also in WWW_Users for defining what should be visible to the user */
 $ModuleList = array(
@@ -38,11 +38,6 @@ $ModuleList = array(
 		'name' => _('Manufacturing'),
 		'group' => 'INVENTORY & PRODUCTION'
 	),
-	array(
-		'icon' => '<i class="metismenu-icon pe-7s-leaf"></i>',
-		'name' => _('Farm Management'),
-		'group' => 'FARM MANAGEMENT'
-	),
 
 	array(
 		'icon' => '<i class="metismenu-icon pe-7s-display2"></i>',
@@ -71,19 +66,6 @@ $ModuleList = array(
 		'group' => 'COMPANY SETUP'
 	)
 );
-
-/// Farm Management
-$MenuItems['FarmManagement']['Transactions']['Caption'] = array(_('Receive Chicks Into Brooding Phase'), _('Receive Birds Into Laying (Point of Lay)'), _('Transfer From Brooding To Rearing Phase'), _('Transfer From Rearing To Production (Laying)'), _('Brooding Management (1-6 Weeks)'), _('Rearing Management (7-22 Weeks)'), _('Laying Management (Production Phase 23-68 Weeks)'), _('Laying Management (Point Of Lay)'), _('Daily Egg Production (Laying Houses)'), _('Transfer Egg From Production To Hacthing'), _('Hatching Management'));
-
-$MenuItems['FarmManagement']['Transactions']['URL'] = array('/egg_DayOldBroodingStage.php', '/egg_ReceiptLayingbirds.php', '/egg_TransferFromBroodingToRearing.php', '/egg_TransferFromRearingToProduction.php', '/egg_BroodingManager.php', '/egg_RearingManager.php', '/egg_LayingManager.php', '/egg_LayingManagerPOL.php', '/egg_DailyProduction.php', '/egg_TransferToHatching.php', '/gg_HatchingManagement.php');
-
-$MenuItems['FarmManagement']['Reports']['Caption'] = array(_('All Rearing Houses Inquiry'), _('Brooding / Rearing / Laying Weekly Expenses'), _('View Specific Expenses Category For (Rearing / Brooding / Laying)'), _('Weekly Mortality Rate For Brooding / Rearing / Laying'), _('Weekly Cost of Brooding / Rearing / Laying Per Bird'), _('View Vaccination Schedule'), _('View Actual Vaccination Actitivies'), _('Feed Conversion Ratio By Pen'), _('View Allocated Brooding / Rearing / Laying Resources'), _('Daily Egg Production Reports'), _('All Completed Hatching Operations Reports'), _('All Hatched Chicks Reports'));
-
-$MenuItems['FarmManagement']['Reports']['URL'] = array('/egg_RearingHousesInquiry.php', '/egg_RearingWeeklyExpenses.php', '/egg_ViewSpecificExpensesCategoriesWeekly.php', '/egg_WeeklyMortalityRateByPen.php', '/egg_WeeklyCostOfRearingPerBird.php', '/egg_VaccinationScheduleReport.php', '/egg_VaccinationActivities.php', '/egg_FeedConversionRation.php', '/egg_ViewAllocatedResources.php', '/egg_DailyProduction.php?page=reports', 'egg_HatchingoperationsInquiry.php', '/egg_AllHachedChicksInquiry.php');
-
-$MenuItems['FarmManagement']['Maintenance']['Caption'] = array(_('Create Brooding / Rearing / Laying Houses'), _('Create Brooding / Rearing / Production Expenses'), _('Setup Vaccination Schedule For Brooding'), _('Setup Vaccination Schedule For Rearing'), _('Setup Vaccination Schedule For Laying'), _('Create Bird Breeds'), _('Setup occasional Management Practice For Brooding / Rearing / Laying Phase'), _('Setup Grading Parameters'), _('Allocate or Distribute Inventory Items To Brooding / Rearing /Laying Houses'));
-
-$MenuItems['FarmManagement']['Maintenance']['URL'] = array('/egg_RearingHouses.php', '/egg_RearingExpenses.php', '/egg_VaccinationScheduleWithSMS.php?stage=brooding', '/egg_VaccinationScheduleWithSMS.php?stage=rearing', '/egg_VaccinationScheduleWithSMS.php?stage=laying', '/egg_BirdBreeds.php', '/gg_ManagementPractices.php', '/egg_GradingParameters.php', '/egg_AllocateApprovedInventoryItems.php');
 
 ///Old menus
 $MenuItems['Sales']['Transactions']['Caption'] = array(_('New Sales Order or Quotation'), _('Enter Counter Sales'), _('Enter Counter Returns'), _('Generate/Print Picking Lists'), _('Outstanding Sales Orders/Quotations'), _('Special Order'), _('Recurring Order Template'), _('Process Recurring Orders'), _('Maintain Picking Lists'));

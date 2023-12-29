@@ -49,7 +49,9 @@ if (isset($Messages) && count($Messages) > 0) {
 }
 ?>
 
-</section>
+<script>
+    document.getElementById('app_messages_dropzone').append(document.getElementById('MessageContainerFoot'))
+</script>
 </div>
 </div>
 </div>

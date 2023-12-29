@@ -7,6 +7,7 @@ $Title = _('Users Maintenance');
 $ViewTopic = 'GettingStarted';
 $BookMark = 'UserMaintenance';
 
+
 if(isset($_POST['UserID']) AND isset($_POST['ID'])) {
 	if($_POST['UserID'] == $_POST['ID']) {
 		if (isset($_POST['UserLanguage']) && !checkLanguageChoice($_POST['UserLanguage'])) {

@@ -103,24 +103,82 @@ if(isset($_POST['Modify'])) {
 		$_SESSION['PDFLanguage'] = $_POST['PDFLanguage'];
 		include('includes/LanguageSetup.php');// After last changes in LanguageSetup.php, is it required to update?
 	}
+
+    if(+@$_POST['image-changed']) {
+        if (isset($_FILES['profile_picture'])) {
+            $profilePicError = null;
+
+            $profilePicTmpPath = $_FILES['profile_picture']['tmp_name'];
+            $imgExt = array_search(
+                (new finfo(FILEINFO_MIME_TYPE))->file($profilePicTmpPath),
+                [
+                    'jpg' => 'image/jpeg',
+                    'png' => 'image/png',
+                    'gif' => 'image/gif',
+                ],
+            );
+            
+            if (!$imgExt) {
+                $profilePicError = 'Invalid picture';
+            }
+
+            if (!$profilePicError) {
+                $imgDir = '/storage/images/users';
+                $storageDir = BASE_PATH . $imgDir;
+                if (!is_dir($storageDir)) {
+                    mkdir($storageDir, 0777, true);
+                }
+                $profilePicNewName = $_SESSION['UserID'] . '-'. rand() .'.'. $imgExt;
+                if (is_file($oldImage = BASE_PATH . $_SESSION['UserImage'])) {
+                    unlink($oldImage);
+                }
+                move_uploaded_file(
+                    $profilePicTmpPath,
+                    "$storageDir/$profilePicNewName"
+                );
+                $profilePicUrlPath = "$imgDir/$profilePicNewName";
+                $_SESSION['UserImage'] = $profilePicUrlPath;
+                DB_query(sprintf(
+                    "UPDATE `www_users` SET `image` = '$profilePicUrlPath' WHERE `userid` = '%s'",
+                    $_SESSION['UserID']
+                ));
+            } else {
+                prnMsg($profilePicError, 'error');
+            }
+
+        }
+    }
 }
 
-echo '<form action="', htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8'), '" method="post">',
-	'<input name="FormID" value="', $_SESSION['FormID'], '" type="hidden" />';
+?>
 
-echo '<table class="selection">
-		<tr>
-			<td>', _('User ID'), ':</td>
-			<td>', $_SESSION['UserID'], '</td>
-		</tr>
-		<tr>
-			<td>', _('User Name'), ':</td>
-			<td>', $_SESSION['UsersRealName'], '<input name="RealName" type="hidden" value="', $_SESSION['UsersRealName'], '" /></td></tr>
-		<tr>
-			<td>', _('Maximum Number of Records to Display'), ':</td>
-			<td><input class="integer" maxlength="3" name="DisplayRecordsMax" required="required" size="3" title="', _('The input must be positive integer'), '" type="text" value="', $_SESSION['DisplayRecordsMax'], '" /></td>
-		</tr>';
+<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8')?>" method="post" enctype="multipart/form-data">
+<input name="FormID" value="<?= $_SESSION['FormID'] ?>" type="hidden" />
 
+<table class="selection">
+    <tr>
+        <td>Profile Picture</td>
+        <td><image-upload max-size="500" src="<?= $_SESSION['UserImage'] ?>" name="profile_picture"></image-upload></td>
+    </tr>
+    <tr>
+        <td><?= _('User ID') ?>:</td>
+        <td><?= $_SESSION['UserID'] ?></td>
+    </tr>
+    <tr>
+        <td><?= _('User Name') ?></td>
+        <td><input class="form-control" value="<?= $_SESSION['UsersRealName'] ?>" />
+            <input name="RealName" type="hidden" value="<?= $_SESSION['UsersRealName'] ?>" />
+        </td>
+    </tr>
+    <tr>
+        <td><?= _('Maximum Number of Records to Display') ?>:</td>
+        <td><input class="integer" maxlength="3" name="DisplayRecordsMax" required="required" size="3"
+                title="<?= _('The input must be positive integer') ?>"
+                type="text" value="<?= $_SESSION['DisplayRecordsMax'] ?>" />
+        </td>
+    </tr>
+
+<?php
 // Select language:
 echo '<tr>
 	<td>', _('Language'), ':</td>

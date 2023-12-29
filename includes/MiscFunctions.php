@@ -11,6 +11,10 @@ function prnMsg($Msg, $Type = 'info', $Prefix = '') {
 	$Messages[] = array($Msg, $Type, $Prefix);
 }
 
+function cache_bust(string $asset) {
+    return $asset . '?v=' . md5_file(BASE_PATH . $asset);
+}
+
 function reverse_escape($str) {
 	$search = array("\\\\", "\\0", "\\n", "\\r", "\Z", "\'", '\"');
 	$replace = array("\\", "\0", "\n", "\r", "\x1a", "'", '"');
