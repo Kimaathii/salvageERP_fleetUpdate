@@ -2,6 +2,7 @@
     <div id="dialog"></div>
 </div>
 
+<div id="MessageContainerFoot">
 <?php
 
 if (isset($Messages) && count($Messages) > 0) {
@@ -38,16 +39,15 @@ if (isset($Messages) && count($Messages) > 0) {
                 }
         }
         ?>
-        <div id="MessageContainerFoot">
             <div class="Message <?= $Class ?> noPrint">
                 <span class="MessageCloseButton">&times;</span>
                 <b><?= $Message[2] ?></b> : <?= $Message[0] ?>
             </div>
-        </div>
         <?php
     }
 }
 ?>
+</div>
 
 <script>
     document.getElementById('app_messages_dropzone').append(document.getElementById('MessageContainerFoot'))
