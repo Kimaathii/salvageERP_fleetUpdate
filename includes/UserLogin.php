@@ -113,7 +113,7 @@ function userLogin($Name, $Password, $SysAdminEmail = '') {
 			$_SESSION['ShowPageHelp'] = $myrow['showpagehelp'];
 			$_SESSION['ShowFieldHelp'] = $myrow['showfieldhelp'];
 			$_SESSION['ScreenFontSize'] = $myrow['fontsize'];
-			$_SESSION['UserImage'] = $myrow['image'];
+			$_SESSION['UserImage'] = $myrow['image'] ?: '/css/xenos/images/user.png';
 
 			switch ($_SESSION['ScreenFontSize']) {
 				case 0:

@@ -105,7 +105,15 @@ if(isset($_POST['Modify'])) {
 	}
 
     if(+@$_POST['image-changed']) {
-        if (isset($_FILES['profile_picture'])) {
+		$userId = $_SESSION['UserID'];
+		$oldImage = @mysqli_fetch_assoc(DB_query("SELECT * from `www_users` where `userid` = '$userId'"))['image'];
+		if ($oldImage) {
+			unlink(BASE_PATH . $oldImage);
+		}
+
+		// die(var_dump(!!@$_FILES['profile_picture']['tmp_name']));
+
+        if (@$_FILES['profile_picture']['tmp_name']) {
             $profilePicError = null;
 
             $profilePicTmpPath = $_FILES['profile_picture']['tmp_name'];
@@ -117,7 +125,7 @@ if(isset($_POST['Modify'])) {
                     'gif' => 'image/gif',
                 ],
             );
-            
+
             if (!$imgExt) {
                 $profilePicError = 'Invalid picture';
             }
@@ -129,9 +137,6 @@ if(isset($_POST['Modify'])) {
                     mkdir($storageDir, 0777, true);
                 }
                 $profilePicNewName = $_SESSION['UserID'] . '-'. rand() .'.'. $imgExt;
-                if (is_file($oldImage = BASE_PATH . $_SESSION['UserImage'])) {
-                    unlink($oldImage);
-                }
                 move_uploaded_file(
                     $profilePicTmpPath,
                     "$storageDir/$profilePicNewName"
@@ -146,7 +151,10 @@ if(isset($_POST['Modify'])) {
                 prnMsg($profilePicError, 'error');
             }
 
-        }
+        } else {
+			DB_query("UPDATE `www_users` set `image` = NULL where `userid` = '$userId'");
+			$_SESSION['UserImage'] = '/css/xenos/images/user.png';
+		}
     }
 }
 
