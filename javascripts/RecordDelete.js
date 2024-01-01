@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     }else {
         //run when there is not edited id
-        document.getElementsByName('edit_id')[0].disabled = true;
+        $(document.getElementsByName('edit_id')[0]).attr('disabled', true);
     }
     //delay automatic trigger of the edit button so edited data can be available on form fields this after page is reloaded
     setTimeout(triggerButtonClick, 50)
@@ -44,7 +44,7 @@ function goBack() {
 // }
 
 //search bar for table
-document.getElementById('searchInput').addEventListener('input', function() {
+document.getElementById('searchInput')?.addEventListener('input', function() {
     let searchValue = this.value.toLowerCase();
     let rows = document.querySelectorAll('#selected tbody tr');
 

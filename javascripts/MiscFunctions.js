@@ -419,9 +419,9 @@ function initial() {
 	/* Notification messages */
 
 	/* Move messages from footer div into header div */
-	document.getElementById('MessageContainerHead').appendChild(
-    document.getElementById('MessageContainerFoot')
-	);
+	// document.getElementById('MessageContainerHead').appendChild(
+    // document.getElementById('MessageContainerFoot')
+	// );
 
 	/* Show footer div after it has been moved to header div */
 	document.getElementById('MessageContainerFoot').style["display"] = "block";

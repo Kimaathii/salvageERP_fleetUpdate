@@ -250,7 +250,7 @@ if (isset($Title) && $Title == _('Copy a BOM to New Item Code')) {
                 border-radius: 10px;
                 padding: 10px 10px 10px 36px;
                 margin-top: 20px;
-                width: 50%;
+                /* width: 50%; */
                 margin: 0 auto;
                 opacity: 1;
                 transition: opacity 0.6s;

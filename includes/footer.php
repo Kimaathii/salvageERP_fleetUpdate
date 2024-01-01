@@ -105,12 +105,18 @@ if (isset($Messages) && count($Messages) > 0) {
                     </li>
                     <li class="nav-item">
                         <a data-placement="top" rel="popover-focus" data-offset="300" data-toggle="popover-custom" class="nav-link" data-original-title="" title="">
-                            <script>
-                                document.write(new Date().getFullYear())
-                            </script> © SavageERP. <div class="badge badge-alternate ml-0 ml-1">
-                                <small><?php echo _('version'); ?> <?php echo $_SESSION['VersionNumber']; ?></small>
-                            </div>
                         </a>
+                        <div class="rm-max-width rm-pointers">
+                            <div class="d-none popover-custom-content">
+                                <script>
+                                    document.write(new Date().getFullYear())
+                                </script>
+                                © SavageERP.
+                                <div class="badge badge-alternate ml-0 ml-1">
+                                    <small><?php echo _('version'); ?> <?php echo $_SESSION['VersionNumber']; ?></small>
+                                </div>
+                            </div>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -121,10 +127,10 @@ if (isset($Messages) && count($Messages) > 0) {
 <!-- JavaScript Imports -->
 <script src="<?php echo $PathPrefix . $RootPath; ?>/css/<?php echo 'putup'; ?>/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="ajaxprocessing.js"></script>
+<script type="text/javascript" src="/css/putup/ajaxprocessing.js"></script>
 <script type="text/javascript" src="<?php echo $PathPrefix . $RootPath; ?>/css/<?php echo 'putup'; ?>/assets/scripts/main.d810cf0ae7f39f28f336.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-<script src="<?php echo $PathPrefix . $RootPath; ?>/css/<?php echo 'putup'; ?>/dataTables/datatables.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script> -->
+<script src="<?php echo $PathPrefix . $RootPath; ?>/css/putup/dataTables/dataTables_datatables.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
