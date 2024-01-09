@@ -21,6 +21,8 @@ if (isset($_POST['PrintPDF'])
 	if ($_POST['All_Or_Overdues']=='All'){
 		$SQL = "SELECT suppliers.supplierid,
 						suppliers.suppname,
+						suppliers.bankpartics,
+						suppliers.bankact,
 						currencies.currency,
 						currencies.decimalplaces AS currdecimalplaces,
 						paymentterms.terms,
@@ -61,6 +63,8 @@ if (isset($_POST['PrintPDF'])
 
 		$SQL = "SELECT suppliers.supplierid,
 						suppliers.suppname,
+						suppliers.bankpartics,
+						suppliers.bankact,
 						currencies.currency,
 						currencies.decimalplaces AS currdecimalplaces,
 						paymentterms.terms,
@@ -147,6 +151,10 @@ if (isset($_POST['PrintPDF'])
 		$LeftOvers = $pdf->addTextWrap(340,$YPos,60,$FontSize,$DisplayDue,'right');
 		$LeftOvers = $pdf->addTextWrap(400,$YPos,60,$FontSize,$DisplayOverdue1,'right');
 		$LeftOvers = $pdf->addTextWrap(460,$YPos,60,$FontSize,$DisplayOverdue2,'right');
+		// Supplier Bank Account
+		if($_POST['DisplayBankDetails']=='Yes') {
+			$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos-=$FontSize,220-$Left_Margin,6,"{$AgedAnalysis['bankpartics']} - {$AgedAnalysis['bankact']}");
+		}
 
 		$YPos -=$line_height;
 		if ($YPos < $Bottom_Margin + $line_height){
@@ -156,10 +164,10 @@ if (isset($_POST['PrintPDF'])
 		if ($_POST['DetailedReport']=='Yes'){
 
 		   $FontSize=6;
-		   /*draw a line under the Supplier aged analysis*/
-		   $pdf->line($Page_Width-$Right_Margin, $YPos+10,$Left_Margin, $YPos+10);
+            /*draw a line under the Supplier aged analysis*/
+            $pdf->line($Page_Width - $Right_Margin, $YPos + 10, $Left_Margin, $YPos + 10);
 
-		   $sql = "SELECT systypes.typename,
+            $sql = "SELECT systypes.typename,
 							supptrans.suppreference,
 							supptrans.trandate,
 							(supptrans.ovamount + supptrans.ovgst - supptrans.alloc) as balance,
@@ -318,6 +326,13 @@ if (isset($_POST['PrintPDF'])
 				<td><select tabindex="5" name="DetailedReport">
 					<option selected="selected" value="No">' . _('Summary Report')  . '</option>
 					<option value="Yes">' . _('Detailed Report')  . '</option>
+					</select></td>
+			</tr>
+			<tr>
+				<td>' . _('Display Bank Details') . ':' . '</td>
+				<td><select tabindex="5" name="DisplayBankDetails">
+					<option selected="selected" value="No">' . _('Do Not Display')  . '</option>
+					<option value="Yes">' . _('Display')  . '</option>
 					</select></td>
 			</tr>
 			</table>
