@@ -627,19 +627,7 @@ if ($_SESSION['RequireCustomerSelection'] == 1 || !isset($_SESSION['Items' . $id
 								<input class="btn btn-danger" type="submit" name="reset" value="' . _('Reset') . '" />
 							</div>
 						</div>
-					</form>
-					<div style="clear:both">&nbsp;</div>
-					<div id="MessageContainerFoot"></div>
-					<div class="centre noprint">
-						<form action="/SelectOrderItems.php" method="post">
-							<input name="FormID" type="hidden" value="' . $_SESSION['FormID'] . '" />
-							<input name="ScriptName" type="hidden" value="" />
-							<input name="Title" type="hidden" value="Select Order Items" />
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>';
+		';
 
 ?>
 
@@ -1676,8 +1664,8 @@ if ($_SESSION['RequireCustomerSelection'] == 1 || !isset($_SESSION['Items' . $id
         }
 	echo '" /></td>
 
-		<td><input type="checkbox" name="RawMaterialFlag" value="M" />'._('Raw material flag').'&nbsp;&nbsp;<br/><span class="dpTbl">'._('If checked, Raw material will be shown on search result').'</span> </td>
-		<td><input type="checkbox" name="CustItemFlag" value="C" />'._('Customer Item flag').'&nbsp;&nbsp;<br/><span class="dpTbl">'._('If checked, only items for this customer will show').'</span> </td>
+		<td><label><input type="checkbox" name="RawMaterialFlag" value="M" /> '._('Raw material flag').'&nbsp;&nbsp;<br/><span class="dpTbl">'._('If checked, Raw material will be shown on search result').'</span> </label></td>
+		<td><label><input type="checkbox" name="CustItemFlag" value="C" /> '._('Customer Item flag').'&nbsp;&nbsp;<br/><span class="dpTbl">'._('If checked, only items for this customer will show').'</span></label> </td>
 			</tr>';
 
 		echo '<tr>
