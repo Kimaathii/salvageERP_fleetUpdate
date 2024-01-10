@@ -373,7 +373,7 @@ if (isset($Title) && $Title == _('Copy a BOM to New Item Code')) {
 <div class="app-container app-theme-white body-tabs-shadow fixed-header fixed-sidebar">
     <div class="app-header header-shadow bg-night-sky header-text-light">
         <div class="app-header__logo">
-            <div class=""><img alt="<?php echo stripslashes($_SESSION['CompanyRecord']['coyname']); ?>" src="<?php echo $_SESSION['UserImage'] ?? "$RootPath/{$_SESSION['LogoFile']}" ?>"
+            <div class=""><img alt="<?php echo stripslashes($_SESSION['CompanyRecord']['coyname']); ?>" src="<?php echo "$RootPath/{$_SESSION['LogoFile']}" ?>"
                                title="<?php echo stripslashes($_SESSION['CompanyRecord']['coyname']); ?>" style="width:50px; border-radius:50%; float:left;" /></div>
             <div class="header__pane ml-auto">
                 <div>
