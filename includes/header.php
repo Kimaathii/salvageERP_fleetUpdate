@@ -368,8 +368,14 @@ if (isset($Title) && $Title == _('Copy a BOM to New Item Code')) {
             echo '<link href="' . $PathPrefix . $RootPath . '/css/' . 'putup' . '/field_help_on.css" rel="stylesheet" type="text/css" media="screen" />';
         }
         ?>
+        <script>
+            addEventListener('load', () => {
+                initial();
+            })
+        </script>
     </head>
-<body onload="initial(); load()" onunload="GUnload()">
+<body onload="load()" onunload="GUnload()">
+
 <div class="app-container app-theme-white body-tabs-shadow fixed-header fixed-sidebar">
     <div class="app-header header-shadow bg-night-sky header-text-light">
         <div class="app-header__logo">

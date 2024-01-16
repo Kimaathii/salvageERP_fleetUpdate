@@ -1362,7 +1362,7 @@ if ($_SESSION['RequireCustomerSelection'] == 1 || !isset($_SESSION['Items' . $id
         echo '<div class="page_help_text">' . _('Quantity (required) - Enter the number of units ordered.  Price (required) - Enter the unit price.  Discount (optional) - Enter a percentage discount.  GP% (optional) - Enter a percentage Gross Profit (GP) to add to the unit cost.  Due Date (optional) - Enter a date for delivery.') . '</div><br />';
 		echo '<br />
 				<table width="90%" cellpadding="2">
-				<tr style="background-color:#800000">';
+				<tr>';
 /*		if($_SESSION['Items'.$identifier]->DefaultPOLine == 1){*/
 		if($ShowPOLine) {
 			echo '<th>' . _('PO Line') . '</th>';

@@ -394,7 +394,7 @@ function initial() {
 	}
 	var ds=document.getElementsByTagName("input");
 	for(i=0;i<ds.length;i++) {
-		if(ds[i].className=="date") {
+		if(ds[i].classList.contains("date")) {
 			ds[i].onclick = clickDate;
 			ds[i].onchange = changeDate;
 		}
