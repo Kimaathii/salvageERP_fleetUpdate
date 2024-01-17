@@ -223,7 +223,6 @@ if ($_POST && !$InputError) {
 	$AccumOrderTotal =0;
 
 	if ($_POST['CreateSpreadsheet']) {
-		require_once(__DIR__ . '/vendor/autoload.php');
 
 		$spreadsheet = new Spreadsheet();
 

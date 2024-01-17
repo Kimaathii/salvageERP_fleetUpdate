@@ -3,19 +3,7 @@
 
 include('includes/session.php');
 
-if (isset($_POST['PrintPDF'])
-	and isset($_POST['FromCriteria'])
-	and mb_strlen($_POST['FromCriteria'])>=1
-	and isset($_POST['ToCriteria'])
-	and mb_strlen($_POST['ToCriteria'])>=1){
-
-	include('includes/PDFStarter.php');
-	$pdf->addInfo('Title',_('Aged Supplier Listing'));
-	$pdf->addInfo('Subject',_('Aged Suppliers'));
-	$FontSize=12;
-	$PageNumber=0;
-	$line_height=12;
-
+if ($_POST) {
 	  /*Now figure out the aged analysis for the Supplier range under review */
 
 	if ($_POST['All_Or_Overdues']=='All'){
@@ -118,6 +106,21 @@ if (isset($_POST['PrintPDF'])
 		include('includes/footer.php');
 		exit;
 	}
+}
+
+if (isset($_POST['PrintPDF'])
+	and isset($_POST['FromCriteria'])
+	and mb_strlen($_POST['FromCriteria'])>=1
+	and isset($_POST['ToCriteria'])
+    and mb_strlen($_POST['ToCriteria'])>=1
+) {
+
+	include('includes/PDFStarter.php');
+	$pdf->addInfo('Title',_('Aged Supplier Listing'));
+	$pdf->addInfo('Subject',_('Aged Suppliers'));
+	$FontSize=12;
+	$PageNumber=0;
+	$line_height=12;
 
 	include ('includes/PDFAgedSuppliersPageHeader.inc');
 	$TotBal = 0;
@@ -275,6 +278,30 @@ if (isset($_POST['PrintPDF'])
 		$pdf->OutputD($_SESSION['DatabaseName'] . '_AgedSuppliers_' . date('Y-m-d').'.pdf');
 	}
 	$pdf->__destruct();
+} else if (isset($_POST['PrintDocx'])) {
+    (function() use ($SupplierResult) {
+        $vendors = [
+            'rows' => [],
+        ];
+        $vendorsToPrint = &$vendors['rows'];
+        while ($AgedAnalysis = DB_fetch_array($SupplierResult)){
+            $current = [];
+            $current['name'] = $AgedAnalysis['suppname'];
+            $current['balance'] = $AgedAnalysis['balance'];
+            $current['current'] = $AgedAnalysis['balance'] - $AgedAnalysis['due'];
+            $current['dueNow'] = $AgedAnalysis['due']-$AgedAnalysis['overdue1'];
+            $current['pastDueDays1'] = $AgedAnalysis['overdue1'] - $AgedAnalysis['overdue2'];
+            $current['pastDueDays2'] = $AgedAnalysis['overdue2'];
+            $current['bankName'] = $AgedAnalysis['bankpartics'];
+            $current['accountNumber'] = $AgedAnalysis['bankact'];
+            $vendorsToPrint[] = $current;
+            $vendors['total'] += $AgedAnalysis['balance'];
+        }
+        // print_r($vendors);
+        // exit;
+        require BASE_PATH . '/Logic/AgedSuppliers_PrintPayableVendorsDocx.php';
+    })();
+
 } else { /*The option to print PDF was not hit */
 
 	$Title = _('Aged Supplier Analysis');
@@ -339,6 +366,7 @@ if (isset($_POST['PrintPDF'])
 			<br />
 			<div class="centre">
 				<input tabindex="6" type="submit" name="PrintPDF" value="' . _('Print PDF') . '" />
+				<input tabindex="6" type="submit" name="PrintDocx" value="' . _('Print Word File') . '" />
 			</div>
             </div>
             </form>';
