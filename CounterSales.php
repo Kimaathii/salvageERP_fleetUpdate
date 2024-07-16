@@ -963,7 +963,7 @@ if (count($_SESSION['Items'.$identifier]->LineItems)>0 ) { /*only show order lin
 	}
 	echo '<tr>
 			<td>' . _('Amount Paid') . ':</td>
-			<td><input type="text" class="number" id="AmountPaid" name="AmountPaid" required="required"  title="' . _('Enter the amount paid by the customer, this must equal the amount of the sale') . '" maxlength="12" size="12" value="' . $_POST['AmountPaid'] . '" readonly /></td>
+			<td><input type="text" class="number" id="AmountPaid" name="AmountPaid" required="required"  title="' . _('Enter the amount paid by the customer, this must equal the amount of the sale') . '" maxlength="12" size="12" value="' . $_POST['AmountPaid'] . '"  /></td>
 		</tr>';
 
 	if (!isset($_POST['ChangeDue'])) {
