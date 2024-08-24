@@ -387,7 +387,8 @@ else {
 								purchorders.status,
 								suppliers.currcode,
 								currencies.decimalplaces AS currdecimalplaces,
-								SUM(purchorderdetails.unitprice*purchorderdetails.quantityord) AS ordervalue
+								SUM(purchorderdetails.unitprice*purchorderdetails.quantityord) AS ordervalue,
+								locations.locationname AS intostocklocationname
 							FROM purchorders
 							INNER JOIN purchorderdetails
 							ON purchorders.orderno = purchorderdetails.orderno
@@ -395,6 +396,8 @@ else {
 							ON purchorders.supplierno = suppliers.supplierid
 							INNER JOIN currencies
 							ON suppliers.currcode=currencies.currabrev
+							LEFT JOIN locations
+            ON purchorders.intostocklocation = locations.loccode
 							WHERE purchorders.intostocklocation = '" . $_POST['StockLocation'] . "'
 							" . $StatusCriteria . "
 							GROUP BY purchorders.orderno,
@@ -404,7 +407,8 @@ else {
 								purchorders.requisitionno,
 								purchorders.allowprint,
 								suppliers.currcode,
-								currencies.decimalplaces";
+								currencies.decimalplaces,
+								locations.locationname";
 			}
 		} //end selected supplier
 
@@ -426,6 +430,7 @@ else {
 					<th class="ascending">' . _('Initiator') . '</th>
 					<th class="ascending">' . _('Order Total') . '</th>
 					<th class="ascending">' . _('Status') . '</th>
+					<th class="ascending">' . _('Location') . '</th>
 				</tr>
 			</thead>
 			</tbody>';
@@ -446,6 +451,7 @@ else {
 					<td>' . $myrow['initiator'] . '</td>
 					<td class="number">' . $FormatedOrderValue . '</td>
 					<td>' . _($myrow['status']) .  '</td>
+					 <td>' . $myrow['intostocklocationname'] . '</td>
 					</tr>';
 				//$myrow['status'] is a string which has gettext translations from PO_Header.php script
 		}

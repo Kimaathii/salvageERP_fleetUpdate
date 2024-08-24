@@ -369,6 +369,7 @@ else {
 						purchorders.realorderno,
 						suppliers.suppname,
 						purchorders.orddate,
+						locations.locationname,
 						purchorders.deliverydate,
 						purchorders.initiator,
 						purchorders.status,

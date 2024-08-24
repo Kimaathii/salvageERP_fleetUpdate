@@ -23,12 +23,12 @@ $DBType = 'mysqli';
 $DBUser = 'root';
 $DBPassword = '';
 // The timezone of the business - this allows the possibility of having;
-date_default_timezone_set('Africa/Abidjan');
-putenv('TZ=Africa/Abidjan');
+date_default_timezone_set('Africa/Lagos');
+putenv('TZ=Africa/Lagos');
 $AllowCompanySelectionBox = 'ShowSelectionBox';
 //The system administrator name use the user input mail;
 $SysAdminEmail = '';
-$DefaultDatabase = 'weberp';
+$DefaultDatabase = 'savage';
 $SessionLifeTime = 3600;
 $MaximumExecutionTime = 120;
 $DefaultClock = 12;
@@ -43,7 +43,7 @@ if ($RootPath == '/' OR $RootPath == '\\') {
 }
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 //Installed companies 
-$CompanyList[0] = array('database'=>'weberp' ,'company'=>'weberp' );
+$CompanyList[0] = array('database'=>'savage' ,'company'=>'Savage ERP' );
 $CompanyList[1] = array('database'=>'weberpdemo' ,'company'=>'WebERP Demo Company' );
 //End Installed companies-do not change this line
 /* Make sure there is nothing - not even spaces after this last ?> */
