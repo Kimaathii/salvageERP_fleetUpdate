@@ -1,0 +1,330 @@
+//this all the ajax in this erp	
+$(document).ready(function() 
+  {
+	 //hybird now
+	 var expr = pather.split('?');
+	var path = expr[0];
+	var suffix = '';
+	//if(numx == 1)
+	suffix = 'leadrpwo_';
+	//else
+	//suffix = 'obaszsms_';
+	var datax = suffix+expr[1];
+	
+	//cusomter code generator
+  $("#cusCode").click(function() {
+	//clas ajax to generate a code
+	var name  = (this.name);
+	//alert(name);
+	$.ajax ({
+	 type: "POST",
+	 data: {bName:name},
+  url: path+"/ajaxPages/codegenerator.php",
+  success: function(data){
+	  if(name == 'salesCode') {
+		 $("#SalesmanCode").val("");
+		 $("#SalesmanCode").val(data);
+	  } else if(name == "cusCode") {
+  $("#DebtorNo").val("");
+  $("#DebtorNo").val(data);
+	  } else if(name == "areaCode") {
+		  $("#AreaCode").val("");
+		  $("#AreaCode").val(data);
+	  } else if(name == "catCode") {
+		  $("#CategoryID").val("");
+		  $("#CategoryID").val(data)
+          } else if(name == "itemCode") {
+			  $("#stockID").val("");
+			  $("#stockID").val(data);
+		  } else if(name == "supCode") {
+		      $("#SupplierID").val("");
+		      $("#SupplierID").val(data);
+		  }
+       } //testing and testing 
+			}); 
+		});
+   //get stock code
+  $("#StockCat").change(function() {
+	//class ajax to generate a code
+	var value  =  $(this).children("option:selected").val();
+	$.ajax({
+		type: "POST",
+		data: {stockID:value,datax:datax},
+		url: path+"/ajaxPages/getstocks.php",
+		success: function(data) {
+			//console.log(data);
+		$("#StockCode").html("");
+		$("#StockCode").html(data);
+			}
+		});
+	});
+  
+  $("#Tag").change(function() {
+	var value  =  $(this).children("option:selected").val();
+	//alert(value);
+	if(value != '0')
+	$("#processgl").attr("disabled", false);
+	else
+	$("#processgl").attr("disabled", true);
+    });
+  //tag 2
+  $("#tag2").change(function() {
+	var value  =  $(this).children("option:selected").val();
+	alert(value);
+	if(value != '0')
+	$("#processgl2").attr("disabled", false);
+	else
+	$("#processgl2").attr("disabled", true);
+    });
+//get stock description
+$("#StockCode").change(function() {
+	//class ajax to generate a code
+	var value  =  $(this).children("option:selected").val();
+	$.ajax({
+		type: "POST",
+		data: {stockCode:value,datax:datax},
+		url: path+"/ajaxPages/getstocknotes.php",
+		success: function(data) {
+			//console.log(data);
+		$("#Keywords").val("");
+		$("#Keywords").val(data);
+			}
+		});
+	});
+
+
+  //region stuff
+  $("#Address2").change(function() {
+	//class ajax to generate a code
+	var value  =  $(this).children("option:selected").val();
+	//alert(value);
+	$.ajax({
+		type: "POST",
+		data: {regionName:value,datax:datax},
+		url: path+"/ajaxPages/getstates.php",
+		success: function(data) {
+		$("#Address3").html("");
+		$("#Address3").html(data);
+			}
+		});
+	});
+  
+   $("#Address3").change(function() {
+	//class ajax to generate a code
+	var value  =  $(this).children("option:selected").val();
+	//alert(value);
+	$.ajax({
+		type: "POST",
+		data: {stateName:value,datax:datax},
+		url: path+"/ajaxPages/getlocalgov.php",
+		success: function(data) {
+		$("#Address4").html("");
+		$("#Address4").html(data);
+			}
+		});
+	});
+	
+	//let get the account balance
+	$("#source").change(function() {
+	//class ajax to generate a code
+	var value  =  $(this).children("option:selected").val();
+	var trdate = $("#TransDate").val();
+	$.ajax({
+		type: "POST",
+		data: {accountcode:value,trdate:trdate,datax:datax},
+		url: path+"/ajaxPages/getbalances.php",
+		success: function(data) {
+		$("#balances").val("");
+		$("#balances").val(data);
+			}
+		});
+	});
+	//select user by depart ment 
+	$("#tagRef").change(function() {
+	var value  =  $(this).children("option:selected").val();
+	//alert(value);
+	if((value != 0) || (value == "")) {
+		$("#ProcessInvoiceBut").removeAttr("disabled");
+	  }
+	});
+	//for payment and itse subsidairies
+   $("#Paymenttype").change(function() {
+	var value  =  $(this).children("option:selected").val();
+	 if(value == "Cheque")
+		$("#cheque").removeClass("hide");
+		else
+		$("#cheque").addClass("hide");
+	});
+   //approval type
+    $("#approvaltype").change(function() {
+	var value  =  $(this).children("option:selected").val();
+	 if((value == "Audit") || (value == "Account"))
+		$("#limitby").removeClass("hide");
+		else
+		$("#limitby").addClass("hide");
+	});
+	//limits 
+	$("#limits").change(function() {
+	var value  =  $(this).children("option:selected").val();
+	 if(value == "limit")
+		$("#limitamount").removeClass("hide");
+		else
+		$("#limitamount").addClass("hide");
+	});
+	 //show amount or not 
+   //delete from glpayments
+   $(".deleteGL").click(function() {
+	var id  =  this.id;
+	 $.ajax({
+		type: "POST",
+		data: {id:id,datax:datax},
+		url: path+"/ajaxPages/deleteGL.php",
+		success: function(data) {
+		//console.log(data);
+	   location.reload();
+	      	}
+		});
+	});
+	$("#BankAccount").change(function() {
+	var bankcode  =  $(this).children("option:selected").val();
+	var datep = $("#DatePaid").val();
+	$.ajax({
+		type: "POST",
+		data: {account:bankcode,datep:datep,datax:datax},
+		url: path+"/ajaxPages/getbankaccountbalance.php",
+		success: function(data) {
+			//console.log(data);
+			//show header
+			var dat = $.parseJSON(data);
+			$("#textupdate").html("");
+			$("#textupdate").html(dat.header);
+			//show balance
+			$("#showbalance").html("");
+			$("#showbalance").html(dat.balance);
+			}
+		});
+	});
+	
+$("#displayby").change(function() {
+	var val =  $(this).children("option:selected").val();
+	if(val == 'DisplayByZone') {
+	    $("#displaybyzone").removeClass('hide');
+	    $("#displaybycustomer").addClass('hide');
+		$("#displaybylocation").addClass('hide');
+	} else if(val == 'DisplayByCustomer') {
+	    $("#displaybycustomer").removeClass('hide');
+	    $("#displaybyzone").addClass('hide');
+		$("#displaybylocation").addClass('hide');
+     	}else if(val == 'DisplayByLocation') {
+	    $("#displaybycustomer").addClass('hide');
+	    $("#displaybyzone").addClass('hide');
+		 $("#displaybylocation").removeClass('hide');
+     	}
+	});
+	
+	$("#DatePaid").blur(function() {
+	var value  =  $(this).val();
+	$("#datechange").html("");
+	$("#datechange").html(value);
+	});
+	
+	$("#department").change(function() {
+	//class ajax to generate a code
+	var value  =  $(this).children("option:selected").val();
+		var loc = $("#location").children("option:selected").val();
+	$.ajax({
+		type: "POST",
+		data: {id:value,loc:loc,datax:datax},
+		url: path+"/ajaxPages/getusers.php",
+		success: function(data) {
+			//console.log(data);
+			var dat = $.parseJSON(data);
+		$("#userbydepart").html("");
+		$("#userbydepart").html(dat.us);
+		//data 2
+		$("#assigned").html("");
+		$("#assigned").html(dat.gs);
+		
+			}
+		});
+	});
+	
+	$("#GLGroup").change(function() {
+	//class ajax to generate a code
+	var value  =  $(this).children("option:selected").val();
+	var type  =  $("#CodingType").children("option:selected").val();
+	//check if the count evelemnt is there 
+	var val = $("#count").val();
+	if(val === 0)
+	var realcount = 1;
+	else
+	var realcount = parseInt(val) + 1;
+	$.ajax({
+		type: "POST",
+		data: {id:value,count:realcount,type:type,datax:datax},
+		url: path+"/ajaxPages/getglaccounts.php",
+		success: function(data) {
+			//console.log(data);
+			if(type === 'split') {
+		$("#showotherform").append(data);
+		$("#count").val(realcount);
+			} else {
+				  $("#showotherform").html("");
+			  $("#showotherform").html(data);
+		     	}
+			}
+		});
+	});
+	
+	$('body').delegate('.addMoreLine', 'click', function() {
+	//class ajax to generate a code
+	var val = $("#count").val();
+	var realcount = parseInt(val) + 1;
+	var value  =  $("#GLGroup").children("option:selected").val();
+	var type = 'split';
+	$.ajax({
+		type: "POST",
+		data: {id:value,count:realcount,type:type,datax:datax},
+		url: path+"/ajaxPages/getglaccounts.php",
+		success: function(data) {
+			//console.log(data);
+		$("#showotherform").append(data);
+			$("#count").val(realcount);
+			}
+		});
+	});
+	
+	$('body').delegate('#Period', 'click', function() {
+	 var value  =  $(this).children("option:selected").val();
+	 if(value === "CustomDate")
+		$(".customDate").removeClass("hide");
+		else
+		$(".customDate").addClass("hide");
+	});
+	
+	$('body').delegate('.RemoveLine', 'click', function() {
+	var id = this.id;													
+    $("#del"+id).remove();
+	});
+	
+	/*setInterval(function(){ 
+    $.ajax({
+      type:'POST',
+      url: path+"/ajaxPages/populate.php",
+      success:function(data) {
+		  //console.log(data);
+	   } //ajax success
+    });
+ }, 1000);*/
+	 
+	/* setInterval(function(){ 
+    $.ajax({
+      type:'POST',
+      url: path+"/ajaxPages/correctsalesorders.php",
+      success:function(data) {
+		  //console.log(data);
+	   } //ajax success
+    });
+ }, 1000);*/
+	
+  });

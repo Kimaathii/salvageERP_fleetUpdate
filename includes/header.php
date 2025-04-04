@@ -3,551 +3,400 @@ $RootPath = '';
 $ViewTopic = isset($ViewTopic) ? '?ViewTopic=' . $ViewTopic : '';
 $BookMark = isset($BookMark) ? '#' . $BookMark : '';
 
+// Check if a theme is set in the URL parameters
 if (isset($_GET['Theme'])) {
+    // Set the theme in the session
     $_SESSION['Theme'] = $_GET['Theme'];
+    // Update the theme in the database for the current user
     $SQL = "UPDATE www_users SET theme='" . $_GET['Theme'] . "' WHERE userid='" . $_SESSION['UserID'] . "'";
-    $Result = DB_query($SQL);
+    $Result = DB_query($SQL); // Execute the query
 }
 
+// Check if the language direction is right-to-left and the theme does not end with '-rtl'
 if ($LanguagesArray[$_SESSION['Language']]['Direction'] == 'rtl' && mb_substr($_SESSION['Theme'], -4) != '-rtl') {
+    // Append '-rtl' to the theme
     $_SESSION['Theme'] = $_SESSION['Theme'] . '-rtl';
 }
 
+// Check if the title is 'Copy a BOM to New Item Code'
 if (isset($Title) && $Title == _('Copy a BOM to New Item Code')) {
-    ob_start();
+    ob_start(); // Start output buffering
 }
 
+// Determine if the body should be wrapped in a div with class 'wrapper'
+$exceptions = [
+    '/Dashboard.php',
+    'savageerp',
+    // '/SelectCustomer.php',
+    // '/SelectProduct.php',
+    // '/SelectSupplier.php'
+];
+$current_url = $_SERVER['REQUEST_URI']; // Get the requested URL
+$should_wrap = (strpos($current_url, '/index.php') === false) && !in_array($current_url, $exceptions);
+
+if ($should_wrap) {
+    echo '<div class="wrapper">';
+}
 ?>
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta http-equiv="Content-Type" content="application/html; charset=utf-8; cache-control: no-cache, no-store, must-revalidate; Pragma: no-cache" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title><?php echo _('Savage ERP') . ' - ' . $Title; ?></title>
-        <link rel="icon" href="<?php echo $PathPrefix . $RootPath; ?>/icon.png" />
-        <link href="<?php echo $PathPrefix . $RootPath; ?>/css/putup/main.css" rel="stylesheet">
-        <link href="<?php echo $PathPrefix . $RootPath; ?>/css/putup/dataTables/datatables.min.css" rel="stylesheet">
-        <link href="<?php echo $PathPrefix . $RootPath; ?>/css/print.css" rel="stylesheet" type="text/css" media="print" />
-        <link href="css/formhandle/RecordDelete.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384H7x7lv6dJjfFDlJZy4cP6CJ9xL4hmGffZbAfx2Cgl4JwZPOXOmYfh0FJfRg" crossorigin="anonymous">
-        <link href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="<?php echo $PathPrefix . $RootPath; ?>/css/putup/assets/icon-fonts/pe-icon-7-stroke/css/helper.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script async type="text/javascript" src="<?php echo $PathPrefix . $RootPath; ?>/javascripts/MiscFunctions.js"></script>
-        <script async src="<?= cache_bust('/assets/js/image-uploader.js') ?>"></script>
-        <script>
-            localStorage.setItem("DateFormat", "<?php echo $_SESSION['DefaultDateFormat']; ?>");
-            localStorage.setItem("Theme", "<?php echo $_SESSION['Theme']; ?>");
-            function removeTable(){
-                document.getElementById('expandTable').style.display = 'none'
-                document.getElementById('cancel').style.display = 'none'
-                goBack();
-            }
-        </script>
-        <style type="text/css">
-            /* DATATABLES */
-            .dataTables_length {
-                display: none !important;
-            }
+<!DOCTYPE html>
+<html lang="en"
+    style="--primary005: rgba(98, 89, 202, 0.05); --primary02: rgba(98, 89, 202, 0.2); --primary03: rgba(98, 89, 202, 0.3); --primary05: rgba(98, 89, 202, 0.5); --primary07: rgba(98, 89, 202, 0.7); --primary08: rgba(98, 89, 202, 0.8); --primary01: rgba(98, 89, 202, 0.1);">
 
-            .dataTables_info {
-                display: none !important;
-            }
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="en" http-equiv="Content-Language">
+    <title><?php echo _('Salvage ERP') . ' - ' . $Title; ?></title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"
+        name="viewport">
+    <meta content="no" name="msapplication-tap-highlight">
 
-            .dataTables_filter {}
+    <!-- FAVICON -->
+    <link rel="icon" href="<?php echo $PathPrefix . $RootPath; ?>/icon.png" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@icon/themify-icons@1.0.1-alpha.3/themify-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Pe-icon-7-stroke/1.2.0/css/pe-icon-7-stroke.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-Az6T4M9ZZyWVpFfGA0FWJYOSp0U9mSEtbc3T8ltVOVPz9cC9T/RPtacHHEbrz6U5" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css" rel="stylesheet">
+    <link href="./Main Menu_files/bootstrap.min.css" id="style" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="./Main Menu_files/icons.css" rel="stylesheet">
+    <link href="Main Menu_files\font-awesome.min.css" rel="stylesheet">
+    <link href="./Main Menu_files/plugin.css" rel="stylesheet">
+    <link href="./Main Menu_files/style.css" rel="stylesheet">
+    <link href="./Main Menu_files/plugins.css" rel="stylesheet">
+   <!-- bootstrap for dashboard -->
+   <link id="style" href="./assets/Dashboard_files/bootstrap.min.css" rel="stylesheet">
+		
+		<!-- ICONS CSS -->
+		<link href="./assets/Dashboard_files/icons.css" rel="stylesheet">
+		<link href="./assets/Dashboard_files/font-awesome.min.css" rel="stylesheet">
+		<link href="./assets/Dashboard_files/plugin.css" rel="stylesheet">
 
-            .dataTables_wrapper {
-                padding-bottom: 30px;
-            }
+		<!-- STYLE CSS -->
+		<link href="./assets/Dashboard_files/style.css" rel="stylesheet">
+		<link href="./assets/Dashboard_files/plugins.css" rel="stylesheet">
+	
 
-            .dataTables_length {
-                float: left;
-            }
+	<script defer="defer" src="./assets/Dashboard_files/MiscFunctions.js.download"></script>
 
-            .dataTables_filter label {
-                margin-right: 5px;
-            }
+    <script defer="defer" src="./Main Menu_files/MiscFunctions.js.download"></script>
 
+    <!-- Morris.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
 
+    <!-- jQuery and Raphael -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
+
+    <!-- Morris.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+    <script>
+        localStorage.setItem("DateFormat", "Y-m-d");
+        localStorage.setItem("Theme", "");
+    </script>
+    <script async type="text/javascript" src="<?php echo $PathPrefix . $RootPath; ?>/javascripts/MiscFunctions.js"></script>
+    <script async src="<?= cache_bust('/assets/js/image-uploader.js') ?>"></script>
+    <script>
+        localStorage.setItem("DateFormat", "<?php echo $_SESSION['DefaultDateFormat']; ?>");
+        localStorage.setItem("Theme", "<?php echo $_SESSION['Theme']; ?>");
+
+        function removeTable() {
+            document.getElementById('expandTable').style.display = 'none'
+            document.getElementById('cancel').style.display = 'none'
+            goBack();
+        }
+    </script>
+    <style type="text/css">
+        .hide {
+            display: none !important;
+        }
+
+        .show {
+            display: inline;
+        }
+
+        @media (max-width: 768px) {
             .html5buttons {
-                float: right !important;
+                float: none;
+                margin-top: 10px;
             }
-
-            .html5buttons a {
-                border: 1px solid #e7eaec;
-                background: #fff;
-                color: #676a6c;
-                box-shadow: none;
-                padding: 6px 8px;
-                font-size: 12px;
-            }
-
-            .html5buttons a:hover,
-            .html5buttons a:focus:active {
-                background-color: #eee;
-                color: inherit;
-                border-color: #d2d2d2;
-            }
-
-            div.dt-button-info {
-                z-index: 100;
-            }
-
-            .hide {
-                display: none !important;
-            }
-
-            .show {
-                display: inline;
-            }
-
-            @media (max-width: 768px) {
-                .html5buttons {
-                    float: none;
-                    margin-top: 10px;
-                }
-                .app-container {
-                    background: #f1f4f6;
-                    width: fit-content;
-                }
-            }
-
-            input[type="text"]:focus {
-                border: none !imortant;
-            }
-
-            .dpTbl {
-                background: #ffffff !important;
-            }
-
-            table {
-                margin-bottom: 1rem;
-                background-color: rgba(0, 0, 0, 0);
-            }
-
-            table thead th {
-                vertical-align: bottom;
-                border-bottom: 2px solid #e9ecef;
-            }
-
-            table th,
-            table td {
-                vertical-align: middle;
-                box-sizing: border-box;
-            }
-
-            table th,
-            table td {
-                padding: .55rem;
-                vertical-align: top;
-                border-top: 1px solid #e9ecef;
-            }
-
-            th {
-                text-align: inherit;
-            }
-
-            table {
-                border-collapse: collapse;
-            }
-
-            input[type="text"],
-            input[type="email"],
-            input[type="tel"],
-            input[type="password"],
-            input[type="number"],
-            textarea {
-                display: block;
-                width: 100%;
-                height: calc(1.5em + .75rem + 2px);
-                padding: .375rem .75rem;
-                font-size: 1rem;
-                font-weight: 400;
-                line-height: 1.5;
-                color: #495057;
-                background-color: #fff;
-                background-clip: padding-box;
-                border: 1px solid #ced4da;
-                border-radius: .25rem;
-                transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-            }
-
-            textarea {
-                height: 100px;
-            }
-
-            select {
-                display: block;
-                width: 100%;
-                height: calc(1.5em + .75rem + 2px);
-                padding: .375rem .75rem;
-                font-size: 1rem;
-                font-weight: 400;
-                line-height: 1.5;
-                color: #495057;
-                border: 1px solid #ced4da;
-                border-radius: .25rem;
-                background-color: #fff;
-            }
-
-            btn-primary:hover {
-                color: #fff;
-                background-color: #2955c8;
-                border-color: #2651be;
-            }
-
-            .btn-primary:hover {
-                color: #fff;
-                background-color: #2955c8;
-                border-color: #2651be;
-            }
-
-            input[type="submit"]:hover {
-                color: #fff;
-                background-color: #31a66a;
-                border-color: #31a66a;
-            }
-
-            button:hover {
-                color: #fff;
-            }
-
-            input[type="submit"],
-            button {
-                display: inline-block;
-                font-weight: 400;
-                color: #495057;
-                text-align: center;
-                vertical-align: middle;
-                user-select: none;
-                background-color: transparent;
-                border: 1px solid transparent;
-                border-top-color: transparent;
-                border-right-color: transparent;
-                border-bottom-color: transparent;
-                border-left-color: transparent;
-                padding: .375rem .75rem;
-                font-size: 1rem;
-                line-height: 1.5;
-                border-radius: .25rem;
-                position: relative;
-                transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
-                color: #fff;
-                background-color: #3f6ad8;
-                border-color: #3f6ad8;
-                font-size: 0.8rem;
-                font-weight: 500;
-                outline: none !important;
-            }
-
-            #MessageContainerFoot {
-                padding: 10px;
-            }
-
-            .Message {
-                border-radius: 10px;
-                padding: 10px 10px 10px 36px;
-                margin-top: 20px;
-                /* width: 50%; */
-                margin: 0 auto;
-                opacity: 1;
-                transition: opacity 0.6s;
-                /* 600ms to fade out */
-            }
-
-            .MessageCloseButton {
-                margin-left: 15px;
-                color: #C8C8C8;
-                font-weight: bold;
-                float: right;
-                font-size: 20px;
-                line-height: 17px;
-                cursor: pointer;
-                transition: 0.3s;
-            }
-
-            .Message.error {
-                background: #ffecec;
-                border: 1px solid #f5aca6;
-            }
-
-            .Message.success {
-                background: #e9ffd9;
-                border: 1px solid #a6ca8a;
-            }
-
-            .Message.info {
-                background: #e3f7fc;
-                border: 1px solid #8ed9f6;
-            }
-
-            .Message.warn {
-                background: #fff8c4;
-                border: 1px solid #f2c779;
-            }
-
-            table{
-                width: 100%
-             }
-            .modal-content{
-                z-index: 1;
-                margin-top: 70px;
-            }
-            .modal-backdrop {
-                background-color: rgba(0, 0, 0, 0.5); /* This sets the color and opacity of the overlay */
-            }
-            .button-like-link {
-                display: inline-block;
-                padding: 6px 16px;
-                font-size: 14px;
-                font-weight: bold;
-                text-align: center;
-                text-decoration: none;
-                cursor: pointer;
-                border: 1px solid #ccc;
-                background-color: #f9f9f9;
-                color: #333;
-                border-radius: 5px;
-                transition: background-color 0.3s ease;
-            }
-
-            .button-like-link:hover {
-                background-color: #ddd;
-            }
-            .current-page {
-                display: inline-block;
-                padding: 8px 6px;
-                background-color: #007BFF;
-                color: #FFFFFF;
-                border-radius: 5px;
-                font-weight: bold;
-                text-decoration: none;
-                margin: 0 5px;
-                font-size: 24px;
-                font-weight: bold;
-                color: black;
-            }
-            .search-container {
-                 margin: 20px;
-             }
-
-            #searchInput {
-                width: 200px;
-                padding: 5px;
-                font-size: 16px;
-                margin-bottom: 10px;
-            }
-            #cancel{
-                display: flex;
-
-                justify-content: end;
-            }
-            #cancel >button{
-                /*padding: 10px;*/
-                /*background-color: #e74c3c; !* Red background color *!*/
-                color: #fff; /* White text color */
-                border: none;
-                border-radius: 50%;
-                cursor: pointer;
-                font-size: 16px;
-            }
-        </style>
-        <?php
-
-        if ($_SESSION['ShowPageHelp'] == 0) {
-            echo '<link href="' . $PathPrefix . $RootPath . '/css/' . 'putup' . '/page_help_off.css" rel="stylesheet" type="text/css" media="screen" />';
-        } else {
-            echo '<link href="' . $PathPrefix . $RootPath . '/css/' . 'putup' . '/page_help_on.css" rel="stylesheet" type="text/css" media="screen" />';
         }
 
-        if ($_SESSION['ShowFieldHelp'] == 0) {
-            echo '<link href="' . $PathPrefix . $RootPath . '/css/' . 'putup' . '/field_help_off.css" rel="stylesheet" type="text/css" media="screen" />';
-        } else {
-            echo '<link href="' . $PathPrefix . $RootPath . '/css/' . 'putup' . '/field_help_on.css" rel="stylesheet" type="text/css" media="screen" />';
+        input[type="text"]:focus {
+            border: none ! important;
         }
-        ?>
-        <script>
-            addEventListener('load', () => {
-                initial();
-            })
-        </script>
-    </head>
-<body onload="load()" onunload="GUnload()">
 
-<div class="app-container app-theme-white body-tabs-shadow fixed-header fixed-sidebar">
-    <div class="app-header header-shadow bg-night-sky header-text-light">
-        <div class="app-header__logo">
-            <div class=""><img alt="<?php echo stripslashes($_SESSION['CompanyRecord']['coyname']); ?>" src="<?php echo "$RootPath/{$_SESSION['LogoFile']}" ?>"
-                               title="<?php echo stripslashes($_SESSION['CompanyRecord']['coyname']); ?>" style="width:50px; border-radius:50%; float:left;" /></div>
-            <div class="header__pane ml-auto">
-                <div>
-                    <button type="button" class="hamburger close-sidebar-btn hamburger--elastic"
-                            data-class="closed-sidebar">
-					<span class="hamburger-box">
-						<span class="hamburger-inner"></span>
-					</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="app-header__mobile-menu">
-            <div>
-                <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
-				<span class="hamburger-box">
-					<span class="hamburger-inner"></span>
-				</span>
-                </button>
-            </div>
-        </div>
-        <div class="app-header__menu">
-		<span>
-			<button type="button"
-                    class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
-				<span class="btn-icon-wrapper">
-					<i class="fa fa-ellipsis-v fa-w-6"></i>
-				</span>
-			</button>
-		</span>
-        </div>
-        <div class="app-header__content">
-            <div class="app-header-left">
-                <div class="search-wrapper">
-                    <div class="input-holder">
-                        <input type="text" class="search-input" placeholder="Type to search">
-                        <button class="search-icon"><span></span></button>
+        table {
+            margin-bottom: 1rem;
+            background-color: rgba(0, 0, 0, 0);
+            border-collapse: collapse;
+        }
+
+        .selection {
+            border-collapse: collapse;
+            width: 100% !important
+        }
+
+        .selection tr {
+            border-top: 1px solid #e8e8f7;
+        }
+
+        .selection tr td:first-child {
+            width: 200px !important;
+            height: auto !important;
+        }
+
+        .page_help_text {
+            line-height: 21px;
+        }
+
+        .page_title_text {
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .field_help_text {
+            display: block;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="password"],
+        input[type="number"],
+        textarea {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 0.875rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #333333;
+            background-color: #ffffff;
+            background-clip: padding-box;
+            border: 1px solid #e8e8f7;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            height: 38px;
+            border-radius: 5px;
+            outline: none !important;
+        }
+
+        textarea {
+            height: 100px;
+        }
+
+        input[type="checkbox"] {
+            background-color: #ffffff;
+            background-clip: padding-box;
+            border: 1px solid #e8e8f7;
+        }
+
+        input[type="submit"],
+        button {
+            display: inline-block;
+            font-weight: 400;
+            color: #fff;
+            line-height: 1.538;
+            padding: 7px 20px;
+            border-radius: 4px;
+            transition: none;
+            min-height: 38px;
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            vertical-align: middle;
+            user-select: none;
+            border: 1px solid #6259ca;
+            background: #6259ca;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            border-radius: 3px;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            margin-right: 10px !important;
+        }
+
+        #app_messages_dropzone {
+            width: 100%;
+        }
+
+        #MessageContainerFoot {
+            padding: 10px;
+        }
+
+        .Message {
+            border-radius: 10px;
+            padding: 10px 10px 10px 36px;
+            margin-top: 20px;
+            width: 50%;
+            margin: 10px auto;
+            opacity: 1;
+            transition: opacity 0.6s;
+            /* 600ms to fade out */
+        }
+
+        .MessageCloseButton {
+            margin-left: 15px;
+            color: #C8C8C8;
+            font-weight: bold;
+            float: right;
+            font-size: 20px;
+            line-height: 17px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .Message.error {
+            background: #ffecec;
+            border: 1px solid #f5aca6;
+        }
+
+        .Message.success {
+            background: #e9ffd9;
+            border: 1px solid #a6ca8a;
+        }
+
+        .Message.info {
+            background: #e3f7fc;
+            border: 1px solid #8ed9f6;
+            width: fit-content;
+        }
+
+        .Message.warn {
+            background: #fff8c4;
+            /*border:1px solid #f2c779;*/
+        }
+    </style>
+    <?php
+    // Include CSS files based on session settings for page and field help
+    if ($_SESSION['ShowPageHelp'] == 0) {
+        echo '<link href="' . $PathPrefix . $RootPath . '/css/' . 'putup' . '/page_help_off.css" rel="stylesheet" type="text/css" media="screen" />';
+    } else {
+        echo '<link href="' . $PathPrefix . $RootPath . '/css/' . 'putup' . '/page_help_on.css" rel="stylesheet" type="text/css" media="screen" />';
+    }
+
+    if ($_SESSION['ShowFieldHelp'] == 0) {
+        echo '<link href="' . $PathPrefix . $RootPath . '/css/' . 'putup' . '/field_help_off.css" rel="stylesheet" type="text/css" media="screen" />';
+    } else {
+        echo '<link href="' . $PathPrefix . $RootPath . '/css/' . 'putup' . '/field_help_on.css" rel="stylesheet" type="text/css" media="screen" />';
+    }
+    ?>
+    <script>
+        addEventListener('load', () => {
+            initial();
+        })
+    </script>
+</head>
+
+<body class="ltr main-body leftmenu" style="overflow-y:scroll !important">
+    <div class="horizontalMenucontainer">
+
+        <!-- PAGE -->
+
+        <input id="Lang" name="Lang" type="hidden" value="US">
+
+        <div class="main-header side-header sticky" style="margin-bottom: -64px;">
+            <div class="main-container container-fluid">
+                <div class="main-header-left">
+                    <a class="main-header-menu-icon" href="javascript:void(0);" id="mainSidebarToggle"><span></span></a>
+                    <div class="hor-logo">
+                        <img alt="<?php echo stripslashes($_SESSION['CompanyRecord']['coyname']); ?>" src="<?php echo "$RootPath/{$_SESSION['LogoFile']}" ?>"
+                            title="<?php echo stripslashes($_SESSION['CompanyRecord']['coyname']); ?>" style="width:50px; border-radius:50%; float:left;" />
                     </div>
-                    <button class="close"></button>
                 </div>
-                <ul class="header-megamenu nav">
-                    <li class="nav-item"><a class="nav-link" href="/Dashboard.php"> <i
-                                    class="nav-link-icon pe-7s-settings"></i> Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/SelectCustomer.php"> <i
-                                    class="nav-link-icon pe-7s-users"></i> Customers</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/SelectProduct.php"> <span
-                                    class="nav-link-icon pe-7s-box1"></span> Items</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/SelectSupplier.php"> <i
-                                    class="nav-link-icon pe-7s-network"></i>Vendors</a></li>
-                </ul>
-            </div>
-            <div class="app-header-right">
-                <div class="header-dots">
-                    <div class="dropdown">
-                        <a class="p-0 mr-2 btn btn-link" href="/Logout.php"
-                           onclick="return confirm('Are you sure you wish to logout?');">
-						<span class="icon-wrapper icon-wrapper-alt rounded-circle">
-							<span style="background:rgba(255, 0, 0, 0.5)!important"
-                                  class="icon-wrapper-bg bg-danger"></span>
-							<i class="icon text-primary ion-android-unlock"></i>
-						</span>
+
+                <div class="main-header-center">
+                    <div class="responsive-logo">
+                        <a href="#">
+                            <img alt="<?php echo stripslashes($_SESSION['CompanyRecord']['coyname']); ?>" src="<?php echo "$RootPath/{$_SESSION['LogoFile']}" ?>"
+                                title="<?php echo stripslashes($_SESSION['CompanyRecord']['coyname']); ?>" style="width:50px; border-radius:50%; float:left;" />
                         </a>
                     </div>
-                    <div class="dropdown">
-                        <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown"
-                                class="p-0 mr-2 btn btn-link">
-						<span class="icon-wrapper icon-wrapper-alt rounded-circle">
-							<span class="icon-wrapper-bg bg-primary"></span>
-							<i class="icon text-primary ion-android-apps"></i>
-						</span>
-                        </button>
-                        <div tabindex="-1" role="menu" aria-hidden="true"
-                             class="dropdown-menu-xl rm-pointers dropdown-menu dropdown-menu-right" style="">
-                            <div class="dropdown-menu-header">
-                                <div class="dropdown-menu-header-inner bg-plum-plate">
-                                    <div class="menu-header-image"
-                                         style="background-image: url(assets/images/dropdown-header/abstract4.jpg);">
-                                    </div>
-                                    <div class="menu-header-content text-white">
-                                        <h6 class="menu-header-subtitle">System users analytics</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="grid-menu grid-menu-xl grid-menu-3col">
-                                <div class="no-gutters row">
-                                    <div class="col-sm-6 col-xl-4">
-                                        <button
-                                                class="btn-icon-vertical btn-square btn-transition btn btn-outline-link">5<i
-                                                    class="pe-7s-world icon-gradient bg-night-fade btn-icon-wrapper btn-icon-lg mb-3"></i>
-                                            System users
-                                        </button>
-                                    </div>
-                                    <div class="col-sm-6 col-xl-4">
-                                        <button
-                                                class="btn-icon-vertical btn-square btn-transition btn btn-outline-link">36<i
-                                                    class="pe-7s-piggy icon-gradient bg-night-fade btn-icon-wrapper btn-icon-lg mb-3">
-                                            </i> Salesman
-                                        </button>
-                                    </div>
-                                    <div class="col-sm-6 col-xl-4">
-                                        <button
-                                                class="btn-icon-vertical btn-square btn-transition btn btn-outline-link">947<i
-                                                    class="pe-7s-paint-bucket icon-gradient bg-night-fade btn-icon-wrapper btn-icon-lg mb-3">
-                                            </i> Suppliers
-                                        </button>
-                                    </div>
-                                    <div class="col-sm-6 col-xl-4">
-                                        <button
-                                                class="btn-icon-vertical btn-square btn-transition btn btn-outline-link">227<i
-                                                    class="pe-7s-menu icon-gradient bg-night-fade btn-icon-wrapper btn-icon-lg mb-3">
-                                            </i> Stock Item
-                                        </button>
-                                    </div>
-                                    <div class="col-sm-6 col-xl-4">
-                                        <button
-                                                class="btn-icon-vertical btn-square btn-transition btn btn-outline-link">19383<i
-                                                    class="pe-7s-hourglass icon-gradient bg-night-fade btn-icon-wrapper btn-icon-lg mb-3"></i>
-                                            Sales Orders
-                                        </button>
-                                    </div>
-                                    <div class="col-sm-6 col-xl-4">
-                                        <button
-                                                class="btn-icon-vertical btn-square btn-transition btn btn-outline-link">12148<i
-                                                    class="pe-7s-world icon-gradient bg-night-fade btn-icon-wrapper btn-icon-lg mb-3">
-                                            </i> Purchase Orders
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <ul class="nav flex-column">
-                                <li class="nav-item-divider nav-item"></li>
-                                <li class="nav-item-btn text-center nav-item">
-                                    <button class="btn-shadow btn btn-primary btn-sm">Follow-ups</button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="dropdown">
-                        <button type="button" data-toggle="dropdown" class="p-0 mr-2 btn btn-link"
-                                aria-expanded="false">
-						<span class="icon-wrapper icon-wrapper-alt rounded-circle">
-							<span class="icon-wrapper-bg bg-focus"></span>
-							<span class="language-icon opacity-8 flag large NG"></span>
-						</span>
-                        </button>
+                    <div class="input-group">
+                        <input class="form-control rounded-0" placeholder="Search for anything..." type="search">
+                        <button class="btn search-btn"><i class="fa-duotone fa-solid fa-magnifying-glass"></i></button>
                     </div>
                 </div>
-                <div class="header-btn-lg pr-0">
-                    <div class="widget-content p-0">
-                        <div class="widget-content-wrapper">
-                            <div class="widget-content-left">
-                                <div class="btn-group">
-                                    <a href="<?php echo $PathPrefix . $RootPath; ?>/UserSettings.php" title="<?php echo _('Change the settings for') . ' ' . $_SESSION['UsersRealName']; ?>"
-                                       class="p-0 btn">
-                                           <img width="42" class="rounded-circle" src="<?php echo $_SESSION['UserImage'] ?? '/css/putup/assets/images/user.png' ?>"
-                                             alt="">
+                <div class="main-header-right">
+                    <div class="navbar navbar-expand-lg  nav nav-item  navbar-nav-right responsive-navbar navbar-dark  ">
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
+                            <div class="d-flex order-lg-2 ms-auto">
+                                <!-- Menu Items Directly Displayed -->
+
+                                <a class="nav-link" href="/Dashboard.php">
+                                    <i class="nav-link-icon pe-7s-settings"></i> Dashboard
+                                </a>
+                                <a class="nav-link" href="/SelectCustomer.php">
+                                    <i class="nav-link-icon pe-7s-users"></i> Customers
+                                </a>
+                                <a class="nav-link" href="/SelectProduct.php">
+                                    <i class="nav-link-icon pe-7s-box1"></i> Items
+                                </a>
+                                <a class="nav-link" href="/SelectSupplier.php">
+                                    <i class="nav-link-icon pe-7s-network"></i> Suppliers
+                                </a>
+                                <!-- Theme-Layout -->
+                                <div class="dropdown d-flex main-header-theme">
+                                    <a class="nav-link icon layout-setting">
+                                        <span class="dark-layout">
+                                            <i class="fa fa-sun header-icons"></i>
+                                        </span>
+                                        <span class="light-layout">
+                                            <i class="fa-solid fa-moon"></i>
+                                        </span>
                                     </a>
                                 </div>
-                            </div>
-                            <div class="widget-content-left  ml-3 header-user-info">
-                                <div class="widget-heading"><?php echo stripslashes($_SESSION['UsersRealName']); ?> </div>
-<!--                                <div class="widget-subheading">--><?php //echo stripslashes($_SESSION['UserID']); ?><!-- </div>-->
+                                <!-- Full screen -->
+                                <div class="dropdown ">
+                                    <a class="nav-link icon full-screen-link">
+                                        <i class="fa fa-maximize fullscreen-button fullscreen header-icons"></i>
+                                        <i class="fa fa-minimize fullscreen-button exit-fullscreen header-icons"></i>
+                                    </a>
+                                </div>
+                                <!-- Notification -->
+                                <div class="dropdown main-header-notification">
+                                    <a class="nav-link icon" href="javascript:void(0);">
+                                        <i class="fa-regular fa-bell"></i>
+                                        <span class="badge bg-danger nav-link-badge">208</span>
+                                    </a>
+                                </div>
+                                <!-- Messages -->
+                                <div class="main-header-notification hide">
+                                    <a class="nav-link icon" href="https://hybrid.leadingedgecloud.com/chat.html">
+                                        <i class="fa fa-message-square header-icons"></i>
+                                        <span class="badge bg-success nav-link-badge">6</span>
+                                    </a>
+                                </div>
+                                <!-- Profile -->
+                                <div class="dropdown main-profile-menu">
+                                    <a class="d-flex" href="javascript:void(0);">
+                                        <span class="main-img-user">
+                                            <img width="42" class="rounded-circle" src="<?php echo $_SESSION['UserImage'] ?? '/css/putup/assets/images/user.png' ?>"
+                                                alt=""></span>
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <div class="header-navheading">
+                                            <h6 class="main-notification-title"><?php echo stripslashes($_SESSION['UsersRealName']); ?> </h6>
+                                            <p class="main-notification-text"><?php echo stripslashes($_SESSION['UserID']); ?></p>
+                                            <a href="<?php echo $PathPrefix . $RootPath; ?>/UserSettings.php" title="<?php echo _('Change the settings for') . ' ' . $_SESSION['UsersRealName']; ?>">User Settings</a>
+                                        </div>
+                                        <a class="dropdown-item" href="/Logout.php"
+                                            onclick="return confirm('Are you sure you wish to logout?');">
+                                            <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- Profile -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
-<?php include('includes/Menu-bar.php'); ?>
+
+    <?php include('includes/Menu-bar.php'); ?>

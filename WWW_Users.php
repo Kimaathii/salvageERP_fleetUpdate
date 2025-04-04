@@ -336,22 +336,24 @@ if(!isset($SelectedUser)) {
 
 /* If its the first time the page has been displayed with no parameters then none of the above are true and the list of Users will be displayed with links to delete or edit each. These will call the same page again and allow update/input or deletion of the records*/
 
-	echo '<table class="selection">
+	echo '
+	<div class="table-responsive tasks">
+	<table class="table text-nowrap text-md-nowrap table-striped mg-b-0">
 		<thead>
 			<tr>
-				<th class="ascending">', _('User Login'), '</th>
-				<th class="ascending">', _('Full Name'), '</th>
-				<th class="ascending">', _('Telephone'), '</th>
-				<th class="ascending">', _('Email'), '</th>
-				<th class="ascending">', _('Customer Code'), '</th>
-				<th class="ascending">', _('Branch Code'), '</th>
-				<th class="ascending">', _('Supplier Code'), '</th>
-				<th class="ascending">', _('Salesperson'), '</th>
-				<th class="ascending">', _('Last Visit'), '</th>
-				<th class="ascending">', _('Security Role'), '</th>
-				<th class="ascending">', _('Report Size'), '</th>
-				<th class="ascending">', _('Theme'), '</th>
-				<th class="ascending">', _('Language'), '</th>
+				<th>', _('User Login'), '</th>
+				<th>', _('Full Name'), '</th>
+				<th>', _('Telephone'), '</th>
+				<th>', _('Email'), '</th>
+				<th>', _('Customer Code'), '</th>
+				<th>', _('Branch Code'), '</th>
+				<th>', _('Supplier Code'), '</th>
+				<th>', _('Salesperson'), '</th>
+				<th>', _('Last Visit'), '</th>
+				<th>', _('Security Role'), '</th>
+				<th>', _('Report Size'), '</th>
+				<th>', _('Theme'), '</th>
+				<th>', _('Language'), '</th>
 				<th class="noprint" colspan="2">&nbsp;</th>
 			</tr>
 		</thead>

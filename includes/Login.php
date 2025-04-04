@@ -1,188 +1,152 @@
 <?php
 // Display demo user name and password within login form if $AllowDemoMode is true
 if ((isset($AllowDemoMode)) and ($AllowDemoMode == True) and (!isset($demo_text))) {
-	$demo_text = _('Login as user') . ': <i>' . _('admin') . '</i><br />' . _('with password') . ': <i>' . _('weberp') . '</i>' . '<br /><a href="../">' . _('Return') . '</a>'; // This line is to add a return link.
-
+    $demo_text = _('Login as user') . ': <i>' . _('admin') . '</i><br />' . _('with password') . ': <i>' . _('weberp') . '</i>' . '<br /><a href="../">' . _('Return') . '</a>'; // This line is to add a return link.
 } elseif (!isset($demo_text)) {
-	$demo_text = '';
+    $demo_text = '';
 }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
+<!doctype html>
+<html lang="en">
+<meta content="text/html;charset=UTF-8" http-equiv="content-type" />
+<meta content="text/html;charset=UTF-8" http-equiv="content-type" />
 
 <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="en" http-equiv="Content-Language">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <title><?php echo _('Salvage ERP') . ' - ' . $Title; ?></title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" name="viewport" />
+    <!-- FAVICON -->
+    <link href="favicon.html" rel="icon">
 
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta http-equiv="Content-Language" content="en">
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>SAVAGE ERP Login screen</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
-	<!-- Disable tap highlight on IE -->
-	<meta name="msapplication-tap-highlight" content="no">
-	<link rel="icon" href="<?php echo $PathPrefix . $RootPath; ?>/icon.png" />
-	<link href="/css/putup/main.css" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
+    <!-- BOOTSTRAP CSS -->
+    <link href="assets\plugins\bootstrap\css\bootstrap.min.css" id="style" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- ICONS CSS -->
+    <link href="assets\plugins\web-fonts\icons.css" rel="stylesheet">
+    <link href="assets\plugins\web-fonts\font-awesome\font-awesome.min.css" rel="stylesheet">
+    <link href="assets\plugins\web-fonts\plugin.css" rel="stylesheet">
+
+    <!-- STYLE CSS -->
+    <link href="\assets\js\css\style.css" rel="stylesheet">
+    <link href="\assets\css\plugins.css" rel="stylesheet">
 </head>
-<style type="text/css">
-	@media screen and (min-width: 990px) {
-		.applogo {
-			display: none !important;
-		}
-	}
 
-	@media screen and (max-width 1000px) {
-		.applogo {
-			margin-top: 20% !important;
-		}
-	}
-</style>
+<body class="ltr main-body leftmenu error-1">
 
-<body>
-	<div class="app-container app-theme-white body-tabs-shadow">
-		<div class="app-container">
-			<div class="h-100" style="background-image: url('assets/background.jpg')">
-				<div class="d-flex h-100 justify-content-center align-items-center">
-					<div class="mx-auto app-login-box col-md-8">
+    <div class="page main-signin-wrapper">
 
+        <!-- Row -->
+        <div class="row signpages text-center">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="row row-sm">
+                        <div class="col-lg-6 col-xl-5 d-none d-lg-block text-center bg-primary details">
+                            <div class="mt-5 pt-4 p-2 pos-absolute">
+                                <img alt="logo" class="header-brand-img mb-4" src="companies\salvage\logo.jpg">
+                                <div class="clearfix"></div>
+                                <img alt="user" class="ht-100 mb-2 mt-2" src="assets\img\brand\logo-login.png" style="border-radius:50%; border:10px solid #8883ca; box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;">
+                                <h5 class="mt-4 text-white">Create Your Account</h5>
+                                <span class="tx-white-6 tx-13 mb-5 mt-xl-0">Take business productivity to a whole new level!</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-xl-7 col-xs-12 col-sm-12 login_form">
+                            <div class="main-container container-fluid">
+                                <div class="row row-sm">
+                                    <div class="card-body mt-2 mb-2">
+                                        <img alt="logo" class="d-lg-none header-brand-img text-start float-start mb-4 error-logo-light" src="companies\salvage\logo.jpg">
+                                        <img alt="logo" class="d-lg-none header-brand-img text-start float-start mb-4 error-logo" src="assets\img\brand\logo-login.png" style="max-width:25%">
+                                        <div class="clearfix"></div>
+                                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8'); ?>" method="post">
+                                            <input name="FormID" type="hidden" value="<?php echo $_SESSION['FormID']; ?>" />
 
-						<div class="row">
+                                            <h5 class="text-start mb-2">Please sign in to your account</h5>
+                                            <p class="mb-2 text-muted tx-13 ms-0 text-start">Sign in to create, analyse, and export your business data</p>
 
-							<div class="col-md-4 bg-night-sky pb-0 card-shadow-danger" style="border-radius: 0.25rem;">
-								<div style="text-align:center;">
-									<img src="./css/putup/assets/logo.png" style="max-width:100%; margin-top:10%; margin-bottom:1%;" />
-								</div>
+                                            <div class="form-group text-start">
+                                                <label>Company</label>
+                                                <select class="custom-select" id="exampleCustomSelect" name="CompanyNameField">
+                                                    <?php
+                                                    // Populate the company list dropdown
+                                                    if (isset($CompanyList) && is_array($CompanyList)) {
+                                                        foreach ($CompanyList as $key => $CompanyEntry) {
+                                                            if (is_dir('companies/' . $CompanyEntry['database'])) {
+                                                                $selected = ($CompanyEntry['database'] == $DefaultDatabase) ? 'selected' : '';
+                                                                echo '<option value="' . $key . '" ' . $selected . '>' . htmlspecialchars($CompanyEntry['company'], ENT_QUOTES, 'UTF-8') . '</option>';
+                                                            }
+                                                        }
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
 
-								<div class="mb-3 card text-white bg-night-sky">
-									<div class="card-header"> <i class="header-icon lnr-bicycle icon-gradient bg-love-kiss"> </i> SAVAGE ERP</div>
-									<div class="card-body">...a complete business solution at your finger snap.</div>
-								</div>
+                                            <div class="form-group text-start">
+                                                <label>User name</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text border-end-0"><i class="fa fa-user-plus"></i></span>
+                                                    <input autofocus class="form-control" maxlength="20" name="UserNameEntryField" placeholder="User name" required="required" type="text" />
+                                                </div>
+                                            </div>
 
-							</div>
-							<div class="col-md-8 card card-shadow-danger card-btm-border">
-								<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8'); ?>" method="post">
-								<div class="card-header">
-										<i class="header-icon lnr-gift icon-gradient bg-mixed-hopes"> </i>
-										<span>Please sign in to your account.
-											<div class="btn-actions-pane-right actions-icon-btn">
-												<div role="group" class="btn-group-sm nav btn-group">
+                                            <div class="form-group text-start">
+                                                <label>Password</label>
+                                                <div class="input-group">
+                                                    <span class="fa fa-fw fa-eye field-icon toggle-password input-group-text border-end-0" style="padding-right:25px;" id="togglePassword"></span>
+                                                    <input class="form-control" id="Password" name="Password" placeholder="Password" required="required" type="password">
+                                                </div>
+                                            </div>
 
-												</div>
-											</div>
-									</div>
-									<div class="card-body">
-									<input type="hidden" name="FormID" value="<?php echo $_SESSION['FormID']; ?>" />
+                                            <input class="btn btn-main-primary btn-block text-white" name="SubmitUser" type="submit" value="Sign In" />
+                                            <p id="demo_text"></p>
+                                        </form>
+                                        <div class="text-start mt-3 ms-0 text-muted tx-13">
+                                            <div>&copy; salvage ERP <i class="fa fa-heart text-danger"></i>. All rights reserved.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Row -->
 
-									<?php
-									if (isset($CompanyList) and is_array($CompanyList)) {
-										foreach ($CompanyList as $key => $CompanyEntry) {
-											if ($DefaultDatabase == $CompanyEntry['database']) {
-												$CompanyNameField = "$key";
-												$DefaultCompany = $CompanyEntry['company'];
-											}
-										}
-										if ($AllowCompanySelectionBox === 'Hide') {
-											// do not show input or selection box
-											echo '<input type="hidden" name="CompanyNameField"  value="' . $CompanyNameField . '" />';
-										} elseif ($AllowCompanySelectionBox === 'ShowInputBox') {
-											// show input box
-											echo _('Company') . ': <br />' . '<input type="text" class="form-control" name="DefaultCompany"  autofocus="autofocus" required="required" value="' . htmlspecialchars($DefaultCompany, ENT_QUOTES, 'UTF-8') . '" disabled="disabled"/>'; //use disabled input for display consistency
-											echo '<input type="hidden" name="CompanyNameField"  value="' . $CompanyNameField . '" />';
-										} else {
-											// Show selection box ($AllowCompanySelectionBox == 'ShowSelectionBox')
+    </div>
+    <!-- END PAGE -->
 
+    <!-- JQUERY JS -->
+    <script src="assets/plugins/jquery/jquery.min.js"></script>
 
-											echo '<div class="form-group">';
-											echo '<label for="company" class="form-label">Company</label>';
-											echo '<select class="custom-select" name="CompanyNameField" aria-label="Company">';
-											foreach ($CompanyList as $key => $CompanyEntry) {
-												if (is_dir('companies/' . $CompanyEntry['database'])) {
-													if ($CompanyEntry['database'] == $DefaultDatabase) {
-														echo '<option selected="selected" label="' . htmlspecialchars($CompanyEntry['company'], ENT_QUOTES, 'UTF-8') . '" value="' . $key . '">' . htmlspecialchars($CompanyEntry['company'], ENT_QUOTES, 'UTF-8') . '</option>';
-													} else {
-														echo '<option label="' . htmlspecialchars($CompanyEntry['company'], ENT_QUOTES, 'UTF-8') . '" value="' . $key . '">' . htmlspecialchars($CompanyEntry['company'], ENT_QUOTES, 'UTF-8') . '</option>';
-													}
-												}
-											}
-											echo '</select> </div>';
-										}
-									} else { //provision for backward compat - remove when we have a reliable upgrade for config.php
-										if ($AllowCompanySelectionBox === 'Hide') {
-											// do not show input or selection box
-											echo '<input type="hidden" name="CompanyNameField"  value="' . $DefaultCompany . '" />';
-										} else if ($AllowCompanySelectionBox === 'ShowInputBox') {
-											// show input box
-											echo _('Company') . '<input type="text" name="CompanyNameField" class="form-control"  autofocus="autofocus" required="required" value="' . $DefaultCompany . '" />';
-										} else {
-											// Show selection box ($AllowCompanySelectionBox == 'ShowSelectionBox')
-											echo '<div class="form-group">';
-											echo '<label for="company" class="form-label">Company</label>';
-											echo '<select class="custom-select" name="CompanyNameField" aria-label="Company">';
-											$Companies = scandir('companies/', 0);
-											foreach ($Companies as $CompanyEntry) {
-												if (is_dir('companies/' . $CompanyEntry) and $CompanyEntry != '..' and $CompanyEntry != '' and $CompanyEntry != '.svn' and $CompanyEntry != '.') {
-													if ($CompanyEntry == $DefaultDatabase) {
-														echo '<option selected="selected" label="' . $CompanyEntry . '" value="' . $CompanyEntry . '">' . $CompanyEntry . '</option>';
-													} else {
-														echo '<option label="' . $CompanyEntry . '" value="' . $CompanyEntry . '">' . $CompanyEntry . '</option>';
-													}
-												}
-											}
-											echo '</select> </div>';
-										}
-									} //end provision for backward compat
+    <!-- BOOTSTRAP JS -->
+    <script src="assets/plugins/bootstrap/js/popper.min.js"></script>
+    <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
 
-									?>
+    <!-- PERFECT SCROLLBAR JS -->
+    <script src="assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 
+    <!-- SELECT2 JS -->
+    <script src="assets/plugins/select2/js/select2.min.js"></script>
+    <script src="assets/js/select2.js"></script>
+    <script src="assets/js/js/custom.js"></script>
 
-<div class="form-group">
-										<label for="username" class="form-label"><?php echo _('User name'); ?></label>
-										<div class="input-group">
-										<div class="input-group-prepend">
-											<span class="input-group-text"><i class="lnr-users"> </i></span>
-										</div>
-										<input type="text" class="form-control" name="UserNameEntryField" required="required" autofocus="autofocus" maxlength="20" placeholder="<?php echo _('User name'); ?>" />
-										</div>
-									</div>
-									<div class="form-group">
-
-										<label class="form-label" for="password-input">Password</label>
-										<div class="input-group">
-											<div class="input-group-prepend">
-												<span class="input-group-text"><i class="lnr-lock"> </i></span>
-											</div>
-											<input type="password" class="form-control pe-5 password-input" required="required" name="Password" placeholder="<?php echo _('Enter Password'); ?>" id="password-input">
-
-										</div>
-									</div>
-									<p id="demo_text">
-
-									</p>
-									<div class="d-block text-right card-footer">
-										<input class="btn btn-danger btn-shadow btn-block" type="submit" value="<?php echo _('Login'); ?>"
-											name="SubmitUser" />
-									</div>
-								</form>
-							</div>
-
-
-						</div> <!-- row -->
-
-
-						<div class="text-center text-white opacity-8 mt-3">
-							<p class="mb-0">&copy;
-								<script>
-									document.write(new Date().getFullYear())
-								</script> Savage ERP.
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<script type="text/javascript" src="/css/putup/assets/scripts/main.d810cf0ae7f39f28f336.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Toggle password visibility
+            $(".toggle-password").click(function() {
+                $(this).toggleClass("fa-eye fa-eye-slash");
+                var input = $($(this).attr("toggle"));
+                if (input.attr("type") == "password") {
+                    input.attr("type", "text");
+                } else {
+                    input.attr("type", "password");
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

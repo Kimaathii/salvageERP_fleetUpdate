@@ -4,78 +4,79 @@
 $ModuleLink = array('Sales', 'AR', 'PO', 'AP', 'stock', 'manuf', 'GL', 'FA', 'PC', 'system', 'Utilities', 'test');
 $ReportList = array('Sales' => 'ord', 'AR' => 'ar', 'PO' => 'prch', 'AP' => 'ap', 'stock' => 'inv', 'manuf' => 'man', 'GL' => 'gl', 'FA' => 'fa', 'PC' => 'pc', 'system' => 'sys', 'Utilities' => 'utils');
 
+
 /*The headings showing on the tabs across the main index used also in WWW_Users for defining what should be visible to the user */
 $ModuleList = array(
 
 	array(
-		'icon' => '<i class="metismenu-icon pe-7s-cart"></i>',
+		'icon' => '<i class="metismenu-icon pe-7s-cart  sidemenu-icon menu-icon"></i>',
 		'name' => _('Sales'),
 		'group' => 'SALES & RECEIVABLES'
 	),
 
 	array(
-		'icon' => '<i class="metismenu-icon pe-7s-way"></i>',
+		'icon' => '<i class="metismenu-icon pe-7s-way sidemenu-icon menu-icon"></i>',
 		'name' => _('Receivables'),
 		'group' => 'SALES & RECEIVABLES'
 	),
 	array(
-		'icon' => '<i class="metismenu-icon pe-7s-graph"></i>',
+		'icon' => '<i class="metismenu-icon pe-7s-graph sidemenu-icon menu-icon"></i>',
 		'name' => _('Purchases'),
 		'group' => 'PURCHASES & PAYABLES'
 	),
 	array(
-		'icon' => '<i class="metismenu-icon pe-7s-plugin"></i>',
+		'icon' => '<i class="metismenu-icon pe-7s-plugin sidemenu-icon menu-icon"></i>',
 		'name' => _('Payables'),
 		'group' => 'PURCHASES & PAYABLES'
 	),
 	array(
-		'icon' => '<i class="metismenu-icon pe-7s-network"></i>',
+		'icon' => '<i class="metismenu-icon pe-7s-network sidemenu-icon menu-icon"></i>',
 		'name' => _('Inventory'),
 		'group' => 'INVENTORY & PRODUCTION'
 	),
 	array(
-		'icon' => '<i class="metismenu-icon pe-7s-compass"></i>',
+		'icon' => '<i class="metismenu-icon pe-7s-compass sidemenu-icon menu-icon"></i>',
 		'name' => _('Manufacturing'),
 		'group' => 'INVENTORY & PRODUCTION'
 	),
 
 	array(
-		'icon' => '<i class="metismenu-icon pe-7s-display2"></i>',
+		'icon' => '<i class="metismenu-icon pe-7s-display2 sidemenu-icon menu-icon"></i>',
 		'name' => _('General Ledger'),
 		'group' => 'ACCOUNTING & FINANCE'
 	),
 	array(
-		'icon' => '<i class="metismenu-icon pe-7s-keypad"></i>',
+		'icon' => '<i class="metismenu-icon pe-7s-keypad sidemenu-icon menu-icon"></i>',
 		'name' => _('Asset Manager'),
 		'group' => 'ACCOUNTING & FINANCE'
 	),
 	array(
-		'icon' => '<i class="metismenu-icon pe-7s-cash"></i>',
+		'icon' => '<i class="metismenu-icon pe-7s-cash sidemenu-icon menu-icon"></i>',
 		'name' => _('Petty Cash'),
 		'group' => 'ACCOUNTING & FINANCE'
 	),
 	array(
-		'icon' => '<i class="metismenu-icon pe-7s-config"></i>',
+		'icon' => '<i class="metismenu-icon pe-7s-config sidemenu-icon menu-icon"></i>',
 		'name' => _('Setup'),
 		'group' => 'COMPANY SETUP'
 	),
 
 	array(
-		'icon' => '<i class="metismenu-icon pe-7s-tools"></i>',
+		'icon' => '<i class="metismenu-icon pe-7s-tools sidemenu-icon menu-icon"></i>',
 		'name' => _('Utilities'),
 		'group' => 'COMPANY SETUP'
 	)
 );
 
 ///Old menus
+
 $MenuItems['Sales']['Transactions']['Caption'] = array(_('New Sales Order or Quotation'), _('Enter Counter Sales'), _('Enter Counter Returns'), _('Generate/Print Picking Lists'), _('Outstanding Sales Orders/Quotations'), _('Special Order'), _('Recurring Order Template'), _('Process Recurring Orders'), _('Maintain Picking Lists'));
 $MenuItems['Sales']['Transactions']['URL'] = array('/SelectOrderItems.php?NewOrder=Yes', '/CounterSales.php', '/CounterReturns.php', '/GeneratePickingList.php', '/SelectSalesOrder.php', '/SpecialOrder.php', '/SelectRecurringSalesOrder.php', '/RecurringSalesOrdersProcess.php', '/SelectPickingLists.php');
 
 $MenuItems['Sales']['Reports']['Caption'] = array(_('Sales Order Inquiry'), _('Print Price Lists'), _('Order Status Report'), _('Orders Invoiced Reports'), _('Daily Sales Inquiry'), _('Sales By Sales Type Inquiry'), _('Sales By Category Inquiry'), _('Sales By Category By Item Inquiry'), _('Sales Analysis Reports'), _('Sales Graphs'), _('Top Sellers Inquiry'), _('Order Delivery Differences Report'), _('Delivery In Full On Time (DIFOT) Report'), _('Sales Order Detail Or Summary Inquiries'), _('Top Sales Items Inquiry'), _('Top Customers Inquiry'), _('Worst Sales Items Report'), _('Sales With Low Gross Profit Report'), _('Sell Through Support Claims Report'), _('Sales to Customers'));
 $MenuItems['Sales']['Reports']['URL'] = array('/SelectCompletedOrder.php', '/PDFPriceList.php', '/PDFOrderStatus.php', '/PDFOrdersInvoiced.php', '/DailySalesInquiry.php', '/SalesByTypePeriodInquiry.php', '/SalesCategoryPeriodInquiry.php', '/StockCategorySalesInquiry.php', '/SalesAnalRepts.php', '/SalesGraph.php', '/SalesTopItemsInquiry.php', '/PDFDeliveryDifferences.php', '/PDFDIFOT.php', '/SalesInquiry.php', '/TopItems.php', '/SalesTopCustomersInquiry.php', '/NoSalesItems.php', '/PDFLowGP.php', '/PDFSellThroughSupportClaim.php', '/SalesReport.php');
-
-$MenuItems['Sales']['Maintenance']['Caption'] = array(_('Create Contract'), _('Select Contract'), _('Sell Through Support Deals'));
-$MenuItems['Sales']['Maintenance']['URL'] = array('/Contracts.php', '/SelectContract.php', '/SellThroughSupport.php');
+$MenuItems['Sales']['Maintenance']['Caption'] = array(_('Create Contract'), _('Select Contract'), _('Sell Through Support Deals'), _('Driver Maintenance'), _('Vehicle Maintenance')); // New menu item
+$MenuItems['Sales']['Maintenance']['URL'] = array('/Contracts.php', '/SelectContract.php', '/SellThroughSupport.php', '/DriverMaintenance.php', '/VehicleMaintenance.php'); // New menu item
 
 $MenuItems['AR']['Transactions']['Caption'] = array(_('Select Order to Invoice'), _('Create A Credit Note'), _('Enter Receipts'), _('Allocate Receipts or Credit Notes'));
 $MenuItems['AR']['Transactions']['URL'] = array('/SelectSalesOrder.php', '/SelectCreditItems.php?NewCredit=Yes', '/CustomerReceipt.php?NewReceipt=Yes&amp;Type=Customer', '/CustomerAllocations.php');

@@ -2,3 +2,5 @@ storage/*
 companies/
 vendor/
 .idea/
+config.php
+

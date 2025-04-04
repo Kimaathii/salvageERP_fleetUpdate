@@ -1,0 +1,456 @@
+<body onload="load()" onunload="GUnload()">
+
+    <div class="app-container app-theme-white body-tabs-shadow fixed-header fixed-sidebar">
+        <div class="app-header header-shadow bg-night-sky header-text-light">
+            <div class="app-header__logo">
+                <div class=""><img alt="<?php echo stripslashes($_SESSION['CompanyRecord']['coyname']); ?>" src="<?php echo "$RootPath/{$_SESSION['LogoFile']}" ?>"
+                                   title="<?php echo stripslashes($_SESSION['CompanyRecord']['coyname']); ?>" style="width:50px; border-radius:50%; float:left;" /></div>
+                <div class="header__pane ml-auto">
+                    <div>
+                        <button type="button" class="hamburger close-sidebar-btn hamburger--elastic"
+                                data-class="closed-sidebar">
+                        <span class="hamburger-box">
+                            <span class="hamburger-inner"></span>
+                        </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="app-header__mobile-menu">
+                <div>
+                    <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
+                    <span class="hamburger-box">
+                        <span class="hamburger-inner"></span>
+                    </span>
+                    </button>
+                </div>
+            </div>
+            <div class="app-header__menu">
+            <span>
+                <button type="button"
+                        class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
+                    <span class="btn-icon-wrapper">
+                        <i class="fa fa-ellipsis-v fa-w-6"></i>
+                    </span>
+                </button>
+            </span>
+            </div>
+            <div class="app-header__content">
+                <div class="app-header-left">
+                    <div class="search-wrapper">
+                        <div class="input-holder">
+                            <input type="text" class="search-input" placeholder="Type to search">
+                            <button class="search-icon"><span></span></button>
+                        </div>
+                        <button class="close"></button>
+                    </div>
+                    <ul class="header-megamenu nav">
+                        <li class="nav-item"><a class="nav-link" href="/Dashboard.php"> <i
+                                        class="nav-link-icon pe-7s-settings"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/SelectCustomer.php"> <i
+                                        class="nav-link-icon pe-7s-users"></i> Customers</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/SelectProduct.php"> <span
+                                        class="nav-link-icon pe-7s-box1"></span> Items</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/SelectSupplier.php"> <i
+                                        class="nav-link-icon pe-7s-network"></i>Vendors</a></li>
+                    </ul>
+                </div>
+                <div class="app-header-right">
+                    <div class="header-dots">
+                        <div class="dropdown">
+                            <a class="p-0 mr-2 btn btn-link" href="/Logout.php"
+                               onclick="return confirm('Are you sure you wish to logout?');">
+                            <span class="icon-wrapper icon-wrapper-alt rounded-circle">
+                                <span style="background:rgba(255, 0, 0, 0.5)!important"
+                                      class="icon-wrapper-bg bg-danger"></span>
+                                <i class="icon text-primary ion-android-unlock"></i>
+                            </span>
+                            </a>
+                        </div>
+                        <div class="dropdown">
+                            <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown"
+                                    class="p-0 mr-2 btn btn-link">
+                            <span class="icon-wrapper icon-wrapper-alt rounded-circle">
+                                <span class="icon-wrapper-bg bg-primary"></span>
+                                <i class="icon text-primary ion-android-apps"></i>
+                            </span>
+                            </button>
+                            <div tabindex="-1" role="menu" aria-hidden="true"
+                                 class="dropdown-menu-xl rm-pointers dropdown-menu dropdown-menu-right" style="">
+                                <div class="dropdown-menu-header">
+                                    <div class="dropdown-menu-header-inner bg-plum-plate">
+                                        <div class="menu-header-image"
+                                             style="background-image: url(assets/images/dropdown-header/abstract4.jpg);">
+                                        </div>
+                                        <div class="menu-header-content text-white">
+                                            <h6 class="menu-header-subtitle">System users analytics</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid-menu grid-menu-xl grid-menu-3col">
+                                    <div class="no-gutters row">
+                                        <div class="col-sm-6 col-xl-4">
+                                            <button
+                                                    class="btn-icon-vertical btn-square btn-transition btn btn-outline-link">5<i
+                                                        class="pe-7s-world icon-gradient bg-night-fade btn-icon-wrapper btn-icon-lg mb-3"></i>
+                                                System users
+                                            </button>
+                                        </div>
+                                        <div class="col-sm-6 col-xl-4">
+                                            <button
+                                                    class="btn-icon-vertical btn-square btn-transition btn btn-outline-link">36<i
+                                                        class="pe-7s-piggy icon-gradient bg-night-fade btn-icon-wrapper btn-icon-lg mb-3">
+                                                </i> Salesman
+                                            </button>
+                                        </div>
+                                        <div class="col-sm-6 col-xl-4">
+                                            <button
+                                                    class="btn-icon-vertical btn-square btn-transition btn btn-outline-link">947<i
+                                                        class="pe-7s-paint-bucket icon-gradient bg-night-fade btn-icon-wrapper btn-icon-lg mb-3">
+                                                </i> Suppliers
+                                            </button>
+                                        </div>
+                                        <div class="col-sm-6 col-xl-4">
+                                            <button
+                                                    class="btn-icon-vertical btn-square btn-transition btn btn-outline-link">227<i
+                                                        class="pe-7s-menu icon-gradient bg-night-fade btn-icon-wrapper btn-icon-lg mb-3">
+                                                </i> Stock Item
+                                            </button>
+                                        </div>
+                                        <div class="col-sm-6 col-xl-4">
+                                            <button
+                                                    class="btn-icon-vertical btn-square btn-transition btn btn-outline-link">19383<i
+                                                        class="pe-7s-hourglass icon-gradient bg-night-fade btn-icon-wrapper btn-icon-lg mb-3"></i>
+                                                Sales Orders
+                                            </button>
+                                        </div>
+                                        <div class="col-sm-6 col-xl-4">
+                                            <button
+                                                    class="btn-icon-vertical btn-square btn-transition btn btn-outline-link">12148<i
+                                                        class="pe-7s-world icon-gradient bg-night-fade btn-icon-wrapper btn-icon-lg mb-3">
+                                                </i> Purchase Orders
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="nav flex-column">
+                                    <li class="nav-item-divider nav-item"></li>
+                                    <li class="nav-item-btn text-center nav-item">
+                                        <button class="btn-shadow btn btn-primary btn-sm">Follow-ups</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+    
+                        <div class="dropdown">
+                            <button type="button" data-toggle="dropdown" class="p-0 mr-2 btn btn-link"
+                                    aria-expanded="false">
+                            <span class="icon-wrapper icon-wrapper-alt rounded-circle">
+                                <span class="icon-wrapper-bg bg-focus"></span>
+                                <span class="language-icon opacity-8 flag large NG"></span>
+                            </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="header-btn-lg pr-0">
+                        <div class="widget-content p-0">
+                            <div class="widget-content-wrapper">
+                                <div class="widget-content-left">
+                                    <div class="btn-group">
+                                        <a href="<?php echo $PathPrefix . $RootPath; ?>/UserSettings.php" title="<?php echo _('Change the settings for') . ' ' . $_SESSION['UsersRealName']; ?>"
+                                           class="p-0 btn">
+                                               <img width="42" class="rounded-circle" src="<?php echo $_SESSION['UserImage'] ?? '/css/putup/assets/images/user.png' ?>"
+                                                 alt="">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="widget-content-left  ml-3 header-user-info">
+                                    <div class="widget-heading"><?php echo stripslashes($_SESSION['UsersRealName']); ?> </div>
+    <!--                                <div class="widget-subheading">--><?php //echo stripslashes($_SESSION['UserID']); ?><!-- </div>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+<!-- menu bar -->
+
+
+        <div class="app-main">
+            <div class="app-sidebar sidebar-shadow bg-night-sky sidebar-text-light">
+                <div class="app-header__logo">
+                    <div class="logo-src"></div>
+                    <div class="header__pane ml-auto">
+                        <div>
+                            <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
+                                <span class="hamburger-box">
+                                    <span class="hamburger-inner"></span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="app-header__mobile-menu">
+                    <div>
+                        <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
+                            <span class="hamburger-box">
+                                <span class="hamburger-inner"></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+                <div class="app-header__menu">
+                    <span>
+                        <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
+                            <span class="btn-icon-wrapper">
+                                <i class="fa fa-ellipsis-v fa-w-6"></i>
+                            </span>
+                        </button>
+                    </span>
+                </div>
+                <div class="scrollbar-sidebar">
+                    <div class="scrollbar-container ps--active-y ps">
+                        <div class="app-sidebar__inner">
+                            <?php
+                                include ('includes/MainMenuLinksArray.php');
+                                echo '<ul class="vertical-nav-menu">';
+                                $groupHeading = "";
+                                $i = 0; // Initialize $i
+                                foreach ($ModuleList as $module) {
+                                    $moduleName = $module['name'];
+                                    $moduleGroup = $module['group'];
+                                    $moduleIcon = $module['icon'];
+        
+                                    if ($_SESSION['ModulesEnabled'][$i] == 1) {
+                                        if ($moduleGroup != $groupHeading) {
+                                            // Output the group heading when it changes
+                                            if ($groupHeading != "") {
+                                                echo '</li>';
+                                            }
+                                            echo '<li class="app-sidebar__heading">' . $moduleGroup . '</li>';
+                                            echo '<li class="mm-active"><a href="', 'index.php', '?Application=', urlencode($ModuleLink[$i]), '">', $moduleIcon, ' ', $moduleName, '</a></li>';
+                                            $groupHeading = $moduleGroup;
+                                        } else {
+                                            // Output the module within the same group
+                                            echo '<li class="main_menu_unselected"><a href="', 'index.php', '?Application=', urlencode($ModuleLink[$i]), '">', $moduleIcon, ' ', $moduleName, '</a></li>';
+                                        }
+                                    }
+                                    ++$i;
+                                }
+        
+                                echo '</li>';
+                                echo '</ul>';
+        
+                                ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="app-main__outer">
+                <div class="app-main__inner">
+                    <div class="app-page-title app-page-title-simple">
+                        <div class="page-title-wrapper">
+                            <div class="page-title-heading">
+                                <div>
+                                    <div class="page-title-head center-elem">
+                                        <span class="d-inline-block pr-2">
+                                            <i class="lnr-apartment opacity-6"></i>
+                                        </span>
+                                        <span class="d-inline-block"><?php echo stripslashes($_SESSION['CompanyRecord']['coyname']); ?></span>
+                                    </div>
+                                    <div class="page-title-subheading opacity-10">
+                                        <nav class="" aria-label="breadcrumb">
+                                            <ol class="breadcrumb">
+                                                <li class="breadcrumb-item">
+                                                    <a>
+                                                        <i aria-hidden="true" class="fa fa-home"></i>
+                                                    </a>
+                                                </li>
+                                                <li class="active breadcrumb-item" aria-current="page">
+                                                    <?php echo $Title ?>
+                                                </li>
+                                            </ol>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="page-title-actions">
+                                <div class="d-inline-block pr-3">
+                                    <select id="custom-inp-top" type="select" class="custom-select">
+                                        <option>Select action...</option>
+                                        <?php
+                                        if (!isset($_SESSION['Favourites'][$ScriptName]) || $_SESSION['Favourites'][$ScriptName] == '') {
+                                            echo '<option>Add to commonly used</option>';
+                                        } else {
+                                            echo '<option>Remove from commonly used</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <button type="button" data-toggle="tooltip" data-placement="left" class="btn btn-dark" title="" data-original-title="Perform Action">
+                                    <i class="fa fa-battery-three-quarters"></i>
+                                </button>
+                            </div>
+        
+                        </div>
+                    </div>
+        
+                    <div id="app_messages_dropzone"></div>
+        
+                    <div class="main-card mb-3 card"><div class="card-body">
+        
+        
+        <!-- footer -->
+        <div id="mask">
+            <div id="dialog"></div>
+        </div>
+        
+        <div id="MessageContainerFoot">
+        <?php
+        
+        if (isset($Messages) && count($Messages) > 0) {
+            foreach ($Messages as $Message) {
+                switch ($Message[1]) {
+                    case 'error':
+                        $Class = 'error';
+                        $Message[2] = $Message[2] ? $Message[2] : _('ERROR') . ' ' . _('Report');
+                        if (isset($_SESSION['LogSeverity']) && $_SESSION['LogSeverity'] > 3) {
+                            fwrite($LogFile, date('Y-m-d h-m-s') . ',' . $Type . ',' . $_SESSION['UserID'] . ',' . trim($Msg, ',') . "\n");
+                        }
+                        break;
+                    case 'warn':
+                    case 'warning':
+                        $Class = 'warn';
+                        $Message[2] = $Message[2] ? $Message[2] : _('WARNING') . ' ' . _('Report');
+                        if (isset($_SESSION['LogSeverity']) && $_SESSION['LogSeverity'] > 3) {
+                            fwrite($LogFile, date('Y-m-d h-m-s') . ',' . $Type . ',' . $_SESSION['UserID'] . ',' . trim($Msg, ',') . "\n");
+                        }
+                        break;
+                    case 'success':
+                        $Class = 'success';
+                        $Message[2] = $Message[2] ? $Message[2] : _('SUCCESS') . ' ' . _('Report');
+                        if (isset($_SESSION['LogSeverity']) && $_SESSION['LogSeverity'] > 3) {
+                            fwrite($LogFile, date('Y-m-d h-m-s') . ',' . $Type . ',' . $_SESSION['UserID'] . ',' . trim($Msg, ',') . "\n");
+                        }
+                        break;
+                    case 'info':
+                    default:
+                        $Message[2] = $Message[2] ? $Message[2] : _('INFORMATION') . ' ' . _('Message');
+                        $Class = 'info';
+                        if (isset($_SESSION['LogSeverity']) && $_SESSION['LogSeverity'] > 2) {
+                            fwrite($LogFile, date('Y-m-d h-m-s') . ',' . $Type . ',' . $_SESSION['UserID'] . ',' . trim($Msg, ',') . "\n");
+                        }
+                }
+                ?>
+                    <div class="Message <?= $Class ?> noPrint">
+                        <span class="MessageCloseButton">&times;</span>
+                        <b><?= $Message[2] ?></b> : <?= $Message[0] ?>
+                    </div>
+                <?php
+            }
+        }
+        ?>
+        </div>
+        
+        <script>
+            document.getElementById('app_messages_dropzone').append(document.getElementById('MessageContainerFoot'))
+        </script>
+        </div>
+        </div>
+        </div>
+        
+        <div class="app-wrapper-footer">
+            <div class="app-footer">
+                <div class="app-footer__inner">
+                    <div class="app-footer-left">
+                        <div class="footer-dots">
+                            <div class="dropdown">
+                                <a aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="dot-btn-wrapper">
+                                    <i class="dot-btn-icon lnr-bullhorn icon-gradient bg-mean-fruit"></i>
+                                </a>
+                            </div>
+        
+                            <div class="dots-separator"></div>
+        
+                            <div class="dropdown">
+                                <a class="dot-btn-wrapper" aria-haspopup="true" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="dot-btn-icon lnr-earth icon-gradient bg-happy-itmeo"></i>
+                                </a>
+                            </div>
+        
+                            <div class="dots-separator"></div>
+        
+                            <div class="dropdown">
+                                <a class="dot-btn-wrapper dd-chart-btn-2" aria-haspopup="true" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="dot-btn-icon lnr-pie-chart icon-gradient bg-love-kiss"></i>
+                                    <div class="badge badge-dot badge-abs badge-dot-sm badge-warning">
+                                        Notifications
+                                    </div>
+                                </a>
+                                <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu-xl rm-pointers dropdown-menu" style="">
+                                    <!-- Dropdown content goes here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app-footer-right">
+                        <ul class="header-megamenu nav">
+                            <li class="nav-item">
+                                <a data-placement="top" rel="popover-focus" data-offset="300" data-toggle="popover-custom" class="nav-link" data-original-title="" title="">
+                                    About
+                                    <i class="fa fa-angle-up ml-2 opacity-8"></i>
+                                </a>
+                                <div class="rm-max-width rm-pointers">
+                                    <div class="d-none popover-custom-content">
+                                        <!-- Popover content goes here -->
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a data-placement="top" rel="popover-focus" data-offset="300" data-toggle="popover-custom" class="nav-link" data-original-title="" title="">
+                                </a>
+                                <div class="rm-max-width rm-pointers">
+                                    <div class="d-none popover-custom-content">
+                                        <script>
+                                            document.write(new Date().getFullYear())
+                                        </script>
+                                        © SavageERP.
+                                        <div class="badge badge-alternate ml-0 ml-1">
+                                            <small><?php echo _('version'); ?> <?php echo $_SESSION['VersionNumber']; ?></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- JavaScript Imports -->
+        <script src="<?php echo $PathPrefix . $RootPath; ?>/css/<?php echo 'putup'; ?>/jquery-3.1.1.min.js"></script>
+        <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/css/putup/ajaxprocessing.js"></script>
+        <script type="text/javascript" src="<?php echo $PathPrefix . $RootPath; ?>/css/<?php echo 'putup'; ?>/assets/scripts/main.d810cf0ae7f39f28f336.js"></script>
+        <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script> -->
+        <script src="<?php echo $PathPrefix . $RootPath; ?>/css/putup/dataTables/dataTables_datatables.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+        
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        
+        
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/metisMenu/1.1.3/metisMenu.min.js"></script>
+        <script src="javascripts/RecordDelete.js"></script>
+        </body>
+        
+        </html>
+        
