@@ -78,17 +78,26 @@ echo '</b></h6></div><ul class="todo-list-wrapper list-group list-group-flush">'
 
 // Display transaction menu items
 $i = 0;
-foreach ($MenuItems[$_SESSION['Module']]['Transactions']['Caption'] as $Caption) {
-	$ScriptNameArray = explode('?', substr($MenuItems[$_SESSION['Module']]['Transactions']['URL'][$i], 1));
-	if (isset($_SESSION['PageSecurityArray'][$ScriptNameArray[0]])) {
-		$PageSecurity = $_SESSION['PageSecurityArray'][$ScriptNameArray[0]];
+if (isset($MenuItems[$_SESSION['Module']]['Transactions'])) {
+	foreach ($MenuItems[$_SESSION['Module']]['Transactions']['Caption'] as $Caption) {
+		$ScriptNameArray = explode('?', substr($MenuItems[$_SESSION['Module']]['Transactions']['URL'][$i], 1));
+		if (isset($_SESSION['PageSecurityArray'][$ScriptNameArray[0]])) {
+			$PageSecurity = $_SESSION['PageSecurityArray'][$ScriptNameArray[0]];
+		} else {
+			$PageSecurity = ''; // Default to an empty string if not set
+		}
+		
+		if ((empty($PageSecurity) || in_array($PageSecurity, $_SESSION['AllowedPageSecurityTokens']))) {
+			echo '<li class="list d-flex align-items-center p-2 border-bottom" style="padding-bottom:5px; padding-top:5px;">
+					
+			<a href="' . $RootPath . $MenuItems[$_SESSION['Module']]['Transactions']['URL'][$i] . '">' . $Caption . '</a>
+				</li>';
+		}
+		++$i;
 	}
-	if ((in_array($PageSecurity, $_SESSION['AllowedPageSecurityTokens']) and $PageSecurity != '')) {
-		echo '<li class="list d-flex align-items-center p-2 border-bottom " style="padding-bottom:5px; padding-top:5px;">
-				<a href="', $RootPath, $MenuItems[$_SESSION['Module']]['Transactions']['URL'][$i], '"  style="padding-left:15px;">', $Caption, '</a>
-			</li>';
-	}
-	++$i;
+} else {
+	// Debugging: Inform if the Transactions array is not set
+	echo '<p>No Transactions items found for the selected module.</p>';
 }
 echo '</ul>
 		</div>

@@ -9,13 +9,13 @@ config.php is in turn included in session.inc*/
 include('includes/session.php');
 
 if (isset($_GET['ModifyOrderNumber'])) {
-	$Title = _('Modifying Order') . ' ' . $_GET['ModifyOrderNumber'];
+	$Title = _('Modifying Reservation') . ' ' . $_GET['ModifyOrderNumber'];
 } else {
-	$Title = _('Select Order Items');
+	$Title = _('New Reservation Order Entry');
 }
 /* webERP manual links before header.inc */
-$ViewTopic= 'SalesOrders';
-$BookMark = 'SalesOrderEntry';
+$ViewTopic= 'New Reservation Order Entry';
+$BookMark = 'NewReservationOrderEntry';
 
 include('includes/header.php');
 include('includes/GetPrice.inc');
@@ -590,11 +590,11 @@ if (isset($SelectedCustomer)) {
 <?php
 if ($_SESSION['RequireCustomerSelection'] == 1 || !isset($_SESSION['Items' . $identifier]->DebtorNo) || $_SESSION['Items' . $identifier]->DebtorNo == '') {
 	echo '
-				<h5 class="card-title">Select Order Items</h5>
+				<h5 class="card-title">New Reservation</h5>
 				<div class="table-responsive">
 					<p class="page_title_text">
 						<img src="/css/images/magnifier.png" title="Search" alt="" />
-						Enter a Sales Order : Search for the Customer Branch.
+						Enter a New Reservation : Search for the Customer Branch.
 					</p>
 					<div class="page_help_text">
 						Orders/Quotations are placed against the Customer Branch. A Customer may have several Branches.
