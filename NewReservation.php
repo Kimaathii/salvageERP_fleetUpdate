@@ -1922,3 +1922,40 @@ function GetCustBranchDetails($identifier) {
 		return $result;
 }
 ?>
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ProcessOrder'])) {
+    $OrderNo = GetNextTransNo(30); // Generate the next unique order number
+    $Location = $_SESSION['Items' . $identifier]->Location;
+
+    // Set initial approval status and level
+    $sql = "INSERT INTO salesorders (
+                orderno,
+                debtorno,
+                branchcode,
+                customerref,
+                comments,
+                orddate,
+                deliverydate,
+                freightcost,
+                fromstkloc,
+                current_approval_level,
+                approval_status
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $db->prepare($sql);
+    $stmt->bind_param(
+        'iissssssiss',
+        $OrderNo,
+        $_SESSION['Items' . $identifier]->DebtorNo,
+        $_SESSION['Items' . $identifier]->Branch,
+        $_SESSION['Items' . $identifier]->CustRef,
+        $_SESSION['Items' . $identifier]->Comments,
+        date('Y-m-d'),
+        $_SESSION['Items' . $identifier]->DeliveryDate,
+        $_SESSION['Items' . $identifier]->FreightCost,
+        $Location,
+        1, // Initial approval level
+        'Pending' // Initial approval status
+    );
+    $stmt->execute();
+}
+?>

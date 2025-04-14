@@ -300,7 +300,7 @@ if ($_SESSION['Items' . $identifier]->SpecialInstructions) {
 echo '<p class="page_title_text"><img alt="" src="', $RootPath, '/css/', $Theme, '/images/inventory.png" title="', // Icon image.
 _('Confirm Dispatch and Invoice'), '" /> ', // Icon title.
 _('Confirm Dispatch and Invoice'), '</p>', // Page title.
-'<table class="selection">
+'<table class="table table-striped">
 		<tr>
 			<td>', _('Customer Code'), '</td>
 			<td class="text">', $_SESSION['Items' . $identifier]->DebtorNo, '</td>
@@ -323,7 +323,9 @@ echo '<input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '" />'
 /***************************************************************
 	Line Item Display
 ***************************************************************/
-echo '<table class="selection">
+echo '
+<div class="table-responsive" style="overflow-x:auto;">
+<table class="selection">
 	<thead>
 	<tr>
 		<th>' . _('Item Code') . '</th>
@@ -603,6 +605,29 @@ if (!isset($_POST['DispatchDate']) or !Is_Date($_POST['DispatchDate'])) {
 echo '<tbody></table><br />';
 
 if (isset($_POST['ProcessInvoice']) and $_POST['ProcessInvoice'] != '') {
+
+	// Check the approval status of the order
+	$OrderNo = $_SESSION['ProcessingOrder'];
+	$sql = "SELECT approval_status, current_approval_level, salesman_id, vehicle_id, driver_id
+			FROM salesorders
+			WHERE orderno = ?";
+	$stmt = $db->prepare($sql);
+	$stmt->bind_param('i', $OrderNo);
+	$stmt->execute();
+	$result = $stmt->get_result();
+	$row = $result->fetch_assoc();
+
+	if ($row['approval_status'] !== 'Stage 2 Approved' || $row['current_approval_level'] != 3 ||
+		empty($row['salesman_id']) || empty($row['vehicle_id']) || empty($row['driver_id'])) {
+		echo '<div class="centre">';
+		prnMsg(_('This order is not fully approved or missing required details. Please complete all stages of approval before invoicing.'), 'error');
+		echo '<a href="ApprovalHandler.php?OrderNumber=' . $_SESSION['ProcessingOrder'] . '">' . _('Go to Approval Page') . '</a>';
+		echo '</div>';
+		include('includes/footer.php');
+		exit;
+	}
+
+	// Continue with invoice processing if approved
 
 	/* SQL to process the postings for sales invoices...
 
@@ -1724,7 +1749,7 @@ if (isset($_POST['ProcessInvoice']) and $_POST['ProcessInvoice'] != '') {
 		$_POST['InvoiceText'] = '';
 	}
 
-	echo '<table class="selection">
+	echo '<table class="table table-striped">
 		<tr>
 			<td>', _('Date On Invoice'), ':</td>
 			<td><input class="date" maxlength="10" name="DispatchDate" required="required" size="11" type="text" value="', $DefaultDispatchDate, '" /></td>

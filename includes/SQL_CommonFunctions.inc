@@ -4,29 +4,23 @@
 /* Common SQL Functions */
 
 
-Function GetNextTransNo ($TransType){
+function GetNextTransNo($Type) {
+    $SQL = "SELECT typeno FROM systypes WHERE typeid = '" . $Type . "'";
+    $Result = DB_query($SQL);
+    $myrow = DB_fetch_row($Result);
+    $NextTransNo = $myrow[0] + 1;
 
-/* SQL to get the next transaction number these are maintained in the table SysTypes - Transaction Types
-Also updates the transaction number
+    // Check if the generated OrderNo already exists
+    $CheckSQL = "SELECT orderno FROM salesorders WHERE orderno = '" . $NextTransNo . "'";
+    $CheckResult = DB_query($CheckSQL);
 
-10 sales invoice
-11 sales credit note
-12 sales receipt
-etc
-*
-*/
-	DB_query("SELECT typeno FROM systypes WHERE typeid='" . $TransType ."' FOR UPDATE");
-	$SQL = "UPDATE systypes SET typeno = typeno + 1 WHERE typeid = '" . $TransType . "'";
-	$ErrMsg = _('CRITICAL ERROR') . '! ' . _('NOTE DOWN THIS ERROR AND SEEK ASSISTANCE') . ': ' . _('The transaction number could not be incremented');
-	$DbgMsg =  _('The following SQL to increment the transaction number was used');
-	$UpdTransNoResult = DB_query($SQL,$ErrMsg,$DbgMsg);
-	$SQL = "SELECT typeno FROM systypes WHERE typeid= '" . $TransType . "'";
-	$ErrMsg = _('CRITICAL ERROR') . '! ' . _('NOTE DOWN THIS ERROR AND SEEK ASSISTANCE') . ': <BR>' . _('The next transaction number could not be retrieved from the database because');
-	$DbgMsg =  _('The following SQL to retrieve the transaction number was used');
-	$GetTransNoResult = DB_query($SQL,$ErrMsg,$DbgMsg);
-	$myrow = DB_fetch_row($GetTransNoResult);
-	return $myrow[0];
+    while (DB_num_rows($CheckResult) > 0) {
+        $NextTransNo++;
+        $CheckSQL = "SELECT orderno FROM salesorders WHERE orderno = '" . $NextTransNo . "'";
+        $CheckResult = DB_query($CheckSQL);
+    }
 
+    return $NextTransNo;
 }
 
 

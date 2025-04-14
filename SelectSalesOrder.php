@@ -237,8 +237,7 @@ if (isset($_POST['PlacePO'])) { /*user hit button to place PO for selected order
 								$AuthMessage = _('You can only authorise up to') . ' ' . $SuppRow['currcode'] . ' ' . $AuthRow['authlevel'] . '.<br />';
 							}
 
-							prnMsg( _('You do not have permission to authorise this purchase order') . '.<br />' .  _('This order is for') . ' ' .
-							$SuppRow['currcode'] . ' ' . $Order_Value . '. ' .
+							prnMsg( _('You do not have permission to authorise this purchase order') . '.<br />' .  _('This order is for') . ' ' . $SuppRow['currcode'] . ' ' . $Order_Value . '. ' .
 							$AuthMessage . _('If you think this is a mistake please contact the systems administrator') . '<br />' .
 							_('The order has been created with a status of pending and will require authorisation'), 'warn');
 						}
@@ -672,206 +671,42 @@ if (isset($StockItemsResult)
 	 }
 
 	//figure out the SQL required from the inputs available
-	if( $_POST['Quotations'] == 'Orders_Only' ) {
-		$Quotations = 0;
-	}
-	elseif( $_POST['Quotations'] == 'Quotes_Only' ) {
-		$Quotations = 1;
-	}
-	elseif( $_POST['Quotations'] == 'Overdue_Only' ) {
-		$Quotations = "0 AND itemdue < CURRENT_DATE";
-	}
-	else {
-		$_POST['Quotations'] = 'Orders_Only';
-		$Quotations = 0;
-	}
-
-	if (isset($_POST['DueDateFrom']) AND is_date($_POST['DueDateFrom'])) {
-		$DueDateFrom = " AND itemdue >= '"  . FormatDateForSQL($_POST['DueDateFrom']) . "' ";
-	} else {
-		$DueDateFrom = '';
-	}
-	if (isset($_POST['DueDateTo']) AND is_date($_POST['DueDateTo'])) {
-		$DueDateTo = " AND itemdue <= '" . FormatDateForSQL($_POST['DueDateTo']) . "'";
-	} else {
-		$DueDateTo = '';
-	}
-	if (isset($_POST['OrderDateFrom']) AND is_date($_POST['OrderDateFrom'])) {
-		$OrderDateFrom = " AND orddate >= '" . FormatDateForSQL($_POST['OrderDateFrom']) . "' ";
-	} else {
-		$OrderDateFrom = '';
-	}
-	if (isset($_POST['OrderDateTo']) AND is_date($_POST['OrderDateTo'])) {
-		$OrderDateTo = " AND orddate <= '" . FormatDateForSQL($_POST['OrderDateTo']) . "' ";
-	} else {
-		$OrderDateTo = '';
-	}
-
-	if(!isset($_POST['StockLocation'])) {
-		$_POST['StockLocation'] = $_SESSION['UserStockLocation'];
-	}
-
-	if ($_SESSION['SalesmanLogin'] != '') {
-		$SalesMan = '=\'' . $_SESSION['SalesmanLogin'] . '\'';
-	} else {
-		$SalesMan = ' LIKE \'%\'';
-	}
-
-	//Harmonize the ordervalue with SUM function since webERP allowed same items appeared several times in one sales orders. If there is no sum value, this situation not inclued.
-	//We should separate itemdue inquiry from normal inquiry.
-	if (($Quotations === 0 OR $Quotations === 1)
-		AND (!isset($DueDateFrom) OR !is_date($DueDateFrom))
-		AND (!isset($DueDateTo) OR !is_date($DueDateTo))) {
-
-			$SQL = "SELECT salesorders.orderno,
-					debtorsmaster.name,
-					custbranch.brname,
-					salesorders.customerref,
-					salesorders.orddate,
-					salesorders.deliverydate,
-					salesorders.deliverto,
-					salesorders.printedpackingslip,
-					salesorders.poplaced,
-					SUM(salesorderdetails.unitprice*(salesorderdetails.quantity-salesorderdetails.qtyinvoiced)*(1-salesorderdetails.discountpercent)/currencies.rate) AS ordervalue,
-					pickreq.prid
-				FROM salesorders
-				INNER JOIN salesorderdetails
-					ON salesorders.orderno = salesorderdetails.orderno
-				INNER JOIN debtorsmaster
-					ON salesorders.debtorno = debtorsmaster.debtorno
-				INNER JOIN custbranch
-					ON debtorsmaster.debtorno = custbranch.debtorno
-					AND salesorders.branchcode = custbranch.branchcode
-				INNER JOIN currencies
-					ON debtorsmaster.currcode = currencies.currabrev
-				LEFT OUTER JOIN pickreq
-					ON pickreq.orderno = salesorders.orderno
-					AND pickreq.closed = 0
-				WHERE salesorderdetails.completed = 0 ";
-			$SQL .= $OrderDateFrom . $OrderDateTo;
-		} else {
-			if ($Quotations !== 0 AND $Quotations !== 1) {//overdue inquiry only
-				$SQL = "SELECT salesorders.orderno,
-						debtorsmaster.name,
-						custbranch.brname,
-						salesorders.customerref,
-						salesorders.orddate,
-						salesorders.deliverydate,
-						salesorders.deliverto,
-						salesorders.printedpackingslip,
-						salesorders.poplaced,
-						SUM(CASE WHEN itemdue < CURRENT_DATE
-						     THEN salesorderdetails.unitprice*(salesorderdetails.quantity-salesorderdetails.qtyinvoiced)*(1-salesorderdetails.discountpercent)/currencies.rate
-						     ELSE 0 END) as ordervalue";
-			} elseif (isset($DueDateFrom) AND is_date($DueDateFrom) AND (!isset($DueDateTo) OR !is_date($DueDateTo))) {
-					$SQL = "SELECT salesorders.orderno,
-						debtorsmaster.name,
-						custbranch.brname,
-						salesorders.customerref,
-						salesorders.orddate,
-						salesorders.deliverydate,
-						salesorders.deliverto,
-						salesorders.printedpackingslip,
-						salesorders.poplaced,
-						SUM(CASE WHEN itemdue >= '" . FormatDateFromSQL($DueDateFrom) . "'
-						     THEN salesorderdetails.unitprice*(salesorderdetails.quantity-salesorderdetails.qtyinvoiced)*(1-salesorderdetails.discountpercent)/currencies.rate
-						     ELSE 0 END) as ordervalue";
-			} elseif (isset($DueDateFrom) AND is_date($DueDateFrom) AND isset($DueDateTo) AND is_date($DueDateTo)) {
-					$SQL = "SELECT salesorders.orderno,
-						debtorsmaster.name,
-						custbranch.brname,
-						salesorders.customerref,
-						salesorders.orddate,
-						salesorders.deliverydate,
-						salesorders.deliverto,
-						salesorders.printedpackingslip,
-						salesorders.poplaced,
-						SUM (CASE WHEN itemdue >= '" . FormatDateForSQL($DueDateFrom) . "' AND itemdue <= '" . FormatDateForSQL($DueDateTo) . "'
-						     THEN salesorderdetails.unitprice*(salesorderdetails.quantity-salesorderdetails.qtyinvoiced)*(1-salesorderdetails.discountpercent)/currencies.rate
-						     ELSE 0 END) as ordervalue";
-			} elseif ((!isset($DueDateFrom) OR !is_date($DueDateFrom)) AND isset($DueDateTo) AND is_date($DueDateTo)) {
-						$SQL = "SELECT salesorders.orderno,
-						debtorsmaster.name,
-						custbranch.brname,
-						salesorders.customerref,
-						salesorders.orddate,
-						salesorders.deliverydate,
-						salesorders.deliverto,
-						salesorders.printedpackingslip,
-						salesorders.poplaced,
-						SUM(CASE WHEN AND itemdue <= '" . FormatDateForSQL($DueDateTo) . "'
-						     THEN salesorderdetails.unitprice*(salesorderdetails.quantity-salesorderdetails.qtyinvoiced)*(1-salesorderdetails.discountpercent)/currencies.rate
-						     ELSE 0 END) as ordervalue";
-			}//end of due date inquiry
-
-				$SQL .= " FROM salesorders INNER JOIN salesorderdetails
-						ON salesorders.orderno = salesorderdetails.orderno
-						INNER JOIN debtorsmaster
-						ON salesorders.debtorno = debtorsmaster.debtorno
-						INNER JOIN custbranch
-						ON debtorsmaster.debtorno = custbranch.debtorno
-						AND salesorders.branchcode = custbranch.branchcode
-						INNER JOIN currencies
-						ON debtorsmaster.currcode = currencies.currabrev
-						WHERE salesorderdetails.completed = 0 ";
-
-				$SQL .= $OrderDateFrom . $OrderDateTo;
-		}
-
-		//Add salesman role control
-			if ($_SESSION['SalesmanLogin'] != '') {
-				$SQL .= " AND salesorders.salesperson = '" . $_SESSION['SalesmanLogin'] . "'";
-			}
-
-			if (isset($OrderNumber) AND $OrderNumber != '') {
-
-				$SQL .= "AND salesorders.orderno = " . $OrderNumber . "
-				    AND salesorders.quotation = " . $Quotations;
-
-			} elseif (isset($CustomerRef) AND $CustomerRef != '') {
-				$SQL .= "AND salesorders.customerref = '" . $CustomerRef . "'
-					AND salesorders.quotation = " . $Quotations;
-
-			} else {
-
-				if (isset($SelectedCustomer)) {
-
-					if (isset($SelectedStockItem)) {
-						$SQL .= "AND salesorders.quotation = " . $Quotations . "
-							AND salesorderdetails.stkcode = '" . $SelectedStockItem . "'
-							AND salesorders.debtorno = '" . $SelectedCustomer . "'
-							AND salesorders.fromstkloc = '" . $_POST['StockLocation'] . "'";
-
-					} else {
-						$SQL .= "AND  salesorders.quotation = " . $Quotations . "
-							AND salesorders.debtorno = '" . $SelectedCustomer . "'
-							AND salesorders.fromstkloc = '" . $_POST['StockLocation'] . "'";
-
-					}
-				} else { //no customer selected
-					if (isset($SelectedStockItem)) {
-							$SQL .= "AND salesorders.quotation = " . $Quotations . "
-								AND salesorderdetails.stkcode = '" . $SelectedStockItem . "'
-								AND salesorders.fromstkloc = '" . $_POST['StockLocation'] . "'";
-					} else {
-							$SQL .= "AND salesorders.quotation = " . $Quotations . "
-								AND salesorders.fromstkloc = '" . $_POST['StockLocation'] . "'";
-					}
-
-				} //end selected customer
-				$SQL .= $DueDateFrom . $DueDateTo;
-
-				$SQL .= ' GROUP BY salesorders.orderno,
-							debtorsmaster.name,
-							custbranch.brname,
-							salesorders.customerref,
-							salesorders.orddate,
-							salesorders.deliverydate,
-							salesorders.deliverto,
-							salesorders.printedpackingslip,
-							salesorders.poplaced
-							ORDER BY salesorders.orderno';
-			} //end not order number selected
+	$SQL = "SELECT salesorders.orderno,
+               debtorsmaster.name,
+               custbranch.brname,
+               salesorders.customerref,
+               salesorders.orddate,
+               salesorders.deliverydate,
+               salesorders.deliverto,
+               salesorders.printedpackingslip,
+               salesorders.poplaced,
+               SUM(salesorderdetails.unitprice * (salesorderdetails.quantity - salesorderdetails.qtyinvoiced) * (1 - salesorderdetails.discountpercent) / currencies.rate) AS ordervalue,
+               MAX(pickreq.prid) AS prid
+        FROM salesorders
+        INNER JOIN salesorderdetails
+            ON salesorders.orderno = salesorderdetails.orderno
+        INNER JOIN debtorsmaster
+            ON salesorders.debtorno = debtorsmaster.debtorno
+        INNER JOIN custbranch
+            ON debtorsmaster.debtorno = custbranch.debtorno
+            AND salesorders.branchcode = custbranch.branchcode
+        INNER JOIN currencies
+            ON debtorsmaster.currcode = currencies.currabrev
+        LEFT OUTER JOIN pickreq
+            ON pickreq.orderno = salesorders.orderno
+            AND pickreq.closed = 0
+        WHERE salesorders.approval_status = 'Level 2 Approved'
+          AND salesorders.quotation = 0
+        GROUP BY salesorders.orderno,
+                 debtorsmaster.name,
+                 custbranch.brname,
+                 salesorders.customerref,
+                 salesorders.orddate,
+                 salesorders.deliverydate,
+                 salesorders.deliverto,
+                 salesorders.printedpackingslip,
+                 salesorders.poplaced
+        ORDER BY salesorders.orderno";
 
 	$ErrMsg = _('No orders or quotations were returned by the SQL because');
 	$SalesOrdersResult = DB_query($SQL, $ErrMsg);
@@ -889,7 +724,8 @@ if (isset($StockItemsResult)
 
 		$AuthRow = DB_fetch_array($AuthResult);
 
-		echo '<table cellpadding="2" width="95%" class="selection">';
+		echo '<div class="table-responsive">
+		<table cellpadding="2" width="95%" class="selection">';
 		if (is_null($AuthRow['cancreate']) or !isset($AuthRow)) {
 			$AuthRow['cancreate'] = 1;
 		}
@@ -1064,7 +900,8 @@ if (isset($StockItemsResult)
 
 		echo '</tr>
 			</tfoot>
-		</table>';
+		</table>
+		</div>';
 	} //end if there are some orders to show
 }
 

@@ -262,6 +262,8 @@ if ($should_wrap) {
 		resize: true
 	});
  });
+// End of Morris Chart1
+
  </script>
 </div>
 <div class="main-navbar-backdrop"></div>

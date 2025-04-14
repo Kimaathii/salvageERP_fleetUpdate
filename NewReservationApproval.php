@@ -1,7 +1,7 @@
 <?php
 $PageSecurity = 6;
 include('includes/session.php');
-$Title = _('New Reservation Approval');
+$Title = _('Create New Reservation Approval');
 $ViewTopic = 'GettingStarted';
 
 if (!in_array($PageSecurity, $_SESSION['AllowedPageSecurityTokens'])) {
@@ -29,29 +29,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $approval_level = intval($_POST['approval_level']);
 
         if (!empty($location) && $approval_level >= 1 && $approval_level <= 4) {
-            $sql = "INSERT INTO approvals (locationname, approval_level) VALUES (?, ?)";
-            $stmt = $db->prepare($sql);
-            if ($stmt === false) {
-                echo '<p class="error">Error preparing statement: ' . $db->error . '</p>';
+            // Check if the location already exists
+            $check_sql = "SELECT COUNT(*) AS count FROM approvals WHERE locationname = ?";
+            $check_stmt = $db->prepare($check_sql);
+            if ($check_stmt === false) {
+            echo '<p class="error">Error preparing statement: ' . $db->error . '</p>';
             } else {
+            $check_stmt->bind_param('s', $location);
+            $check_stmt->execute();
+            $check_result = $check_stmt->get_result();
+            $row = $check_result->fetch_assoc();
+
+            if ($row['count'] > 0) {
+                echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    This location already exists. Please choose a different location.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>';
+            } else {
+                // Insert the new location
+                $sql = "INSERT INTO approvals (locationname, approval_level) VALUES (?, ?)";
+                $stmt = $db->prepare($sql);
+                if ($stmt === false) {
+                echo '<p class="error">Error preparing statement: ' . $db->error . '</p>';
+                } else {
                 $stmt->bind_param('si', $location, $approval_level);
 
                 if ($stmt->execute()) {
                     echo '<script>
-                            alert("Operation completed successfully.");
-                            window.location.href = "' . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . '";
-                          </script>';
+                        alert("Operation completed successfully.");
+                        window.location.href = "' . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . '";
+                      </script>';
                     exit;
                 } else {
                     echo '<p class="error">Error: ' . $stmt->error . '</p>';
                 }
                 $stmt->close();
+                }
+            }
+            $check_stmt->close();
             }
         } else {
             echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    Please provide valid inputs.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>';
+                Please provide valid inputs.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>';
         }
     }
 }
@@ -166,7 +187,6 @@ $result_approvals = $db->query($sql_approvals);
 if ($result_approvals->num_rows > 0) {
     echo '<div class="table-responsive" style="margin-top: 60px;">
     <h4>Existing Approvals</h4>
-    <p class="text-primary">Click on Edit to modify an entry or Delete to remove it.</p>
     <table class="table table-striped">';
     echo '<thead><tr><th><strong>Location</strong></th><th><strong>Approval Level</strong></th><th><strong>Actions</strong></th></tr></thead>';
     echo '<tbody>';
@@ -176,7 +196,8 @@ if ($result_approvals->num_rows > 0) {
         echo '<td class="text-primary">' . htmlspecialchars($row['approval_level']) . '</td>';
         echo '<td>
                 <a class="btn btn-sm btn-primary" href="' . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . '?edit_id=' . urlencode($row['id']) . '">Edit</a> |
-                <a class="btn btn-sm btn-danger" href="' . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . '?delete_id=' . urlencode($row['id']) . '" onclick="return confirm(\'Are you sure you want to delete this record?\');">Delete</a>
+                <a class="btn btn-sm btn-danger" href="' . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . '?delete_id=' . urlencode($row['id']) . '" onclick="return confirm(\'Are you sure you want to delete this record?\');">Delete</a> |
+                <a class="btn btn-sm btn-success" href="' . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . '?add_users_location=' . urlencode($row['locationname']) . '">Add Users</a>
               </td>';
         echo '</tr>';
     }
@@ -255,7 +276,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search'])) {
 }
 
 echo '<div style="margin-top: 60px;">
-        <h4>User Approvals</h4>
+        <h4>User with Authorization</h4>
         <form method="get" action="' . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . '" class="mb-3" style="float: right; width: 40%;">
             <div class="input-group">
             <input type="text" name="search" class="form-control" placeholder="Search by location, department, or username" value="' . (isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '') . '">
@@ -358,39 +379,80 @@ if (isset($_GET['delete_user_id'])) {
               </div>';
     }
 }
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['location'], $_POST['department'], $_POST['username'], $_POST['approval_level'], $_POST['created_at'])) {
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['location'], $_POST['department'], $_POST['username'], $_POST['approval_level'], $_POST['created_at'])) {
     $location = $_POST['location'];
     $department = $_POST['department'];
     $username = $_POST['username'];
-    $approval_level = $_POST['approval_level'];
+    $approval_level = intval($_POST['approval_level']);
     $created_at = $_POST['created_at'];
 
-    if (!empty($location) && !empty($department) && !empty($username) && !empty($approval_level) && !empty($created_at) && $approval_level >= 1 && $approval_level <= 4) {
-        $sql = "INSERT INTO user_approvals (location, department, username, approval_level, created_at) VALUES (?, ?, ?, ?, ?)";
-        $stmt = $db->prepare($sql);
-        if ($stmt === false) {
-            echo '<p class="error">Error preparing statement: ' . $db->error . '</p>';
-        } else {
-            $stmt->bind_param('sssds', $location, $department, $username, $approval_level, $created_at);
+    // Fetch the maximum approval level for the location
+    $sql = "SELECT approval_level FROM approvals WHERE locationname = ?";
+    $stmt = $db->prepare($sql);
 
-            if ($stmt->execute()) {
-                echo '<script>
-                        alert("Operation completed successfully.");
-                        window.location.href = "' . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . '";
-                      </script>';
-                exit;
-            } else {
-                echo '<p class="error">Error: ' . $stmt->error . '</p>';
-            }
-            $stmt->close();
+    if ($stmt === false) {
+        die('<p class="error">Error preparing statement: ' . htmlspecialchars($db->error) . '</p>');
+    }
+
+    $stmt->bind_param('s', $location);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $max_approval_level = $row['approval_level'];
+
+        // Count the number of users already created for this location
+        $sql_count = "SELECT COUNT(*) AS user_count FROM user_approvals WHERE location = ?";
+        $stmt_count = $db->prepare($sql_count);
+
+        if ($stmt_count === false) {
+            die('<p class="error">Error preparing statement: ' . htmlspecialchars($db->error) . '</p>');
+        }
+
+        $stmt_count->bind_param('s', $location);
+        $stmt_count->execute();
+        $result_count = $stmt_count->get_result();
+        $row_count = $result_count->fetch_assoc();
+        $current_user_count = $row_count['user_count'];
+
+        // Check if the current user count exceeds the approval level
+        if ($current_user_count >= $max_approval_level) {
+            echo '<p class="error">Cannot create more users for this location. The maximum number of users (' . $max_approval_level . ') has already been reached.</p>';
+            exit;
+        }
+
+        // Validate the approval level
+        if ($approval_level < 1 || $approval_level > $max_approval_level) {
+            echo '<p class="error">Invalid approval level for the selected location.</p>';
+            exit;
+        }
+
+        // Insert the user approval record
+        $sql_insert = "INSERT INTO user_approvals (location, department, username, approval_level, created_at) VALUES (?, ?, ?, ?, ?)";
+        $stmt_insert = $db->prepare($sql_insert);
+
+        if ($stmt_insert === false) {
+            die('<p class="error">Error preparing statement: ' . htmlspecialchars($db->error) . '</p>');
+        }
+
+        $stmt_insert->bind_param('sssis', $location, $department, $username, $approval_level, $created_at);
+
+        if ($stmt_insert->execute()) {
+            echo '<script>
+                    alert("User approval created successfully.");
+                    window.location.href = "' . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . '";
+                  </script>';
+            exit;
+        } else {
+            echo '<p class="error">Error: ' . htmlspecialchars($stmt_insert->error) . '</p>';
         }
     } else {
-        echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
-                Please provide valid inputs.
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>';
+        echo '<p class="error">Invalid location selected.</p>';
     }
 }
+
 // Fetch departments from the database
 $sql_departments = "SELECT DISTINCT description AS department FROM departments"; // Assuming a 'departments' table exists
 $result_departments = $db->query($sql_departments);
@@ -399,75 +461,96 @@ $result_departments = $db->query($sql_departments);
 $sql_users = "SELECT userid FROM www_users"; // Assuming a 'www_users' table exists
 $result_users = $db->query($sql_users);
 
-// Display the form for user approvals
-echo '<div  style="margin-top: 60px;">
-   
-<form action="' . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . '" method="post" enctype="multipart/form-data">
-    <input name="FormID" type="hidden" value="' . $_SESSION['FormID'] . '" />';
-echo '<h4>New User Approval</h4>';
-echo '<div class="row">';
-echo '<div class="col-md-6">';
-echo '<label for="location">Select Location:</label>';
-echo '<select name="location" id="location" required class="form-control">';
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        echo '<option value="' . htmlspecialchars($row['locationname']) . '">' . htmlspecialchars($row['locationname']) . '</option>';
+
+if (isset($_GET['add_users_location'])) {
+    $selected_location = $_GET['add_users_location'];
+
+    // Fetch the maximum approval level for the selected location
+    $sql = "SELECT approval_level FROM approvals WHERE locationname = ?";
+    $stmt = $db->prepare($sql);
+
+    if ($stmt === false) {
+        // Output the error message if prepare() fails
+        die('<p class="error">Error preparing statement: ' . htmlspecialchars($db->error) . '</p>');
     }
-} else {
-    echo '<option value="" disabled>No locations available</option>';
-}
-echo '</select>';
-echo '</div>'; // Close col-md-6
 
-echo '<div class="col-md-6">';
-echo '<label for="department">Select Department:</label>';
-echo '<select name="department" id="department" required class="form-control">';
-if ($result_departments->num_rows > 0) {
-    while ($row = $result_departments->fetch_assoc()) {
-        echo '<option value="' . htmlspecialchars($row['department']) . '">' . htmlspecialchars($row['department']) . '</option>';
+    $stmt->bind_param('s', $selected_location);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $max_approval_level = $row['approval_level'];
+
+        // Display the user approval form
+        echo '<div style="margin-top: 60px;">
+            <h4>Create User Approval for Location: ' . htmlspecialchars($selected_location) . '</h4>
+            <form action="' . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . '" method="post" enctype="multipart/form-data">
+                <input name="FormID" type="hidden" value="' . $_SESSION['FormID'] . '" />
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="location">Location:</label>
+                        <input type="text" name="location" id="location" value="' . htmlspecialchars($selected_location) . '" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="department">Select Department:</label>
+                        <select name="department" id="department" required class="form-control">';
+        // Fetch departments from the database
+        $sql_departments = "SELECT DISTINCT description AS department FROM departments";
+        $result_departments = $db->query($sql_departments);
+        if ($result_departments->num_rows > 0) {
+            while ($row = $result_departments->fetch_assoc()) {
+                echo '<option value="' . htmlspecialchars($row['department']) . '">' . htmlspecialchars($row['department']) . '</option>';
+            }
+        } else {
+            echo '<option value="" disabled>No departments available</option>';
+        }
+        echo '</select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="username">Select Username:</label>
+                        <select name="username" id="username" required class="form-control">';
+        // Fetch users from the database
+        $sql_users = "SELECT userid FROM www_users";
+        $result_users = $db->query($sql_users);
+        if ($result_users->num_rows > 0) {
+            while ($row = $result_users->fetch_assoc()) {
+                echo '<option value="' . htmlspecialchars($row['userid']) . '">' . htmlspecialchars($row['userid']) . '</option>';
+            }
+        } else {
+            echo '<option value="" disabled>No users available</option>';
+        }
+        echo '</select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="approval_level">Approval Level:</label>';
+        echo '<select name="approval_level" id="approval_level" required class="form-control">';
+        for ($i = 1; $i <= $max_approval_level; $i++) {
+            echo '<option value="' . $i . '">Assign to Approval Level ' . $i . '</option>';
+        }
+        echo '</select>';
+        echo '</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="created_at">Created At:</label>
+                        <input type="datetime-local" name="created_at" id="created_at" required class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary mt-4">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>';
+    } else {
+        echo '<p class="error">Invalid location selected.</p>';
     }
-} else {
-    echo '<option value="" disabled>No departments available</option>';
 }
-echo '</select>';
-echo '</div>'; // Close col-md-6
-echo '</div>'; // Close row
 
-echo '<div class="row">';
-echo '<div class="col-md-6">';
-echo '<label for="username">Select Username:</label>';
-echo '<select name="username" id="username" required class="form-control">';
-if ($result_users->num_rows > 0) {
-    while ($row = $result_users->fetch_assoc()) {
-        echo '<option value="' . htmlspecialchars($row['userid']) . '">' . htmlspecialchars($row['userid']) . '</option>';
-    }
-} else {
-    echo '<option value="" disabled>No users available</option>';
-}
-echo '</select>';
-echo '</div>'; // Close col-md-6
-
-echo '<div class="col-md-6">';
-echo '<label for="approval_level">Approval Level (1-4):</label>';
-echo '<select name="approval_level" id="approval_level" required class="form-control">';
-for ($i = 1; $i <= 4; $i++) {
-    echo '<option value="' . $i . '">' . $i . '</option>';
-}
-echo '</select>';
-echo '</div>'; // Close col-md-6
-echo '</div>'; // Close row
-
-echo '<div class="row">';
-echo '<div class="col-md-6">';
-echo '<label for="created_at">Created At:</label>';
-echo '<input type="datetime-local" name="created_at" id="created_at" required class="form-control">';
-echo '</div>'; // Close col-md-6
-
-echo '<div class="col-md-6">';
-echo '<button type="submit" class="btn btn-primary mt-4">Submit</button>';
-echo '</div>'; // Close col-md-6
-echo '</div> 
-        </form></div>'; // Close row
 include('includes/footer.php');
 
 ?>

@@ -1205,4 +1205,27 @@ echo '</div>
       </div>
       </form>';
 include('includes/footer.php');
+
+// Check the approval status of the order
+if (isset($_SESSION['ProcessingOrder'])) {
+    $sql = "SELECT approval_status FROM salesorders WHERE orderno = ?";
+    $stmt = $db->prepare($sql);
+    $stmt->bind_param('i', $_SESSION['ProcessingOrder']);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+
+    if ($row['approval_status'] !== 'Level 1 Approved') {
+        prnMsg(_('This order has not been approved at Level 1. You cannot proceed to confirm the delivery.'), 'error');
+        include('includes/footer.php');
+        exit;
+    }
+}
+
+if (isset($_GET['OrderNumber']) && $_GET['OrderNumber'] > 0) {
+    $_SESSION['ProcessingOrder'] = (int)$_GET['OrderNumber'];
+    header('Location: ConfirmDispatch_Invoice.php');
+    exit;
+}
+
 ?>

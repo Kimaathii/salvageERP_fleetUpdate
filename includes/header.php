@@ -107,6 +107,86 @@ if ($should_wrap) {
             goBack();
         }
     </script>
+   <script>
+    $(document).ready(function() {
+        // Initialize Select2
+        if (!$('#SenderBankAccount').hasClass('select2-hidden-accessible')) {
+            // $('#SenderBankAccount').select2();
+    
+
+        // Listen for changes on the Select2 dropdown
+        $('#SenderBankAccount').on('select2:select', function(e) {
+            const selectedOption = e.params.data.element; // Get the selected <option> element
+            const balance = selectedOption.getAttribute('data-balance');
+            const currency = selectedOption.getAttribute('data-currency');
+
+            // Debugging
+            console.log('Selected Option:', selectedOption);
+            console.log('Balance:', balance);
+            console.log('Currency:', currency);
+
+            // Update the Current Balance and Currency fields
+            document.getElementById('CurrentBalance').textContent = balance ? balance : '0.00';
+            document.getElementById('Currency').value = currency ? currency : '';
+        });
+    }
+  
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const senderBankAccount = document.getElementById('SenderBankAccount');
+        const amountInput = document.getElementById('Amount');
+        const transferButton = document.getElementById('TransferButton');
+        const errorMessage = document.getElementById('ErrorMessage');
+        const successMessage = document.getElementById('SuccessMessage');
+        const currentBalanceSpan = document.getElementById('CurrentBalance');
+
+        // Update balance when sender bank account changes
+        senderBankAccount.addEventListener('change', function () {
+            const selectedOption = this.options[this.selectedIndex];
+            const balance = parseFloat(selectedOption.getAttribute('data-balance')) || 0;
+
+            currentBalanceSpan.textContent = balance.toFixed(2);
+
+            // Check if the balance is negative
+            if (balance < 0) {
+                errorMessage.textContent = 'The sender\'s account balance is negative. Transfer cannot proceed.';
+                errorMessage.style.display = 'inline';
+                successMessage.style.display = 'none';
+                transferButton.disabled = true;
+            } else {
+                errorMessage.style.display = 'none';
+                successMessage.style.display = 'none';
+                transferButton.disabled = false;
+            }
+        });
+
+        // Validate the transfer amount
+        amountInput.addEventListener('input', function () {
+            const selectedOption = senderBankAccount.options[senderBankAccount.selectedIndex];
+            const balance = parseFloat(selectedOption.getAttribute('data-balance')) || 0;
+            const amount = parseFloat(amountInput.value) || 0;
+
+            if (amount > balance) {
+                errorMessage.textContent = 'Insufficient funds for this transfer.';
+                errorMessage.style.display = 'inline';
+                successMessage.style.display = 'none';
+                transferButton.disabled = true;
+            } else if (balance < 0) {
+                errorMessage.textContent = 'The sender\'s account balance is negative. Transfer cannot proceed.';
+                errorMessage.style.display = 'inline';
+                successMessage.style.display = 'none';
+                transferButton.disabled = true;
+            } else {
+                errorMessage.style.display = 'none';
+                successMessage.textContent = 'Transfer details look good!';
+                successMessage.style.display = 'inline';
+                transferButton.disabled = false;
+            }
+        });
+    });
+</script>
     <style type="text/css">
         .hide {
             display: none !important;
