@@ -49,6 +49,29 @@ while ($location = DB_fetch_array($locationsResult)) {
 echo '</select>
       </form>';
 
+// Check if the user is authorized for the selected location
+if (!empty($SelectedLocation)) {
+    $authSQL = "SELECT COUNT(*) AS authorized
+                FROM locationusers
+                WHERE userid = ?
+                  AND loccode = ?";
+    $stmt = $db->prepare($authSQL);
+    if (!$stmt) {
+        die('SQL Prepare Error: ' . $db->error);
+    }
+    $stmt->bind_param('ss', $loggedInUser, $SelectedLocation);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $authRow = $result->fetch_assoc();
+
+    if ($authRow['authorized'] == 0) {
+        // If the user is not authorized, show an error message and terminate the script
+        prnMsg(_('You are not authorized to access this location. Please contact the administrator to authorize you for this location.'), 'error');
+        include('includes/footer.php');
+        exit;
+    }
+}
+
 // Only fetch and display items if a location is selected
 if (!empty($SelectedLocation)) {
     $sql = "SELECT salesorders.orderno, 

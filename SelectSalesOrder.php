@@ -780,7 +780,7 @@ if (isset($StockItemsResult)
 		while ($MyRow = DB_fetch_array($SalesOrdersResult)) {
 
 			$ModifyPage = $RootPath . '/SelectOrderItems.php?ModifyOrderNumber=' . urlencode($MyRow['orderno']);
-			$Confirm_Invoice = $RootPath . '/ConfirmDispatch_Invoice.php?OrderNumber=' . urlencode($MyRow['orderno']);
+			$Confirm_Invoice = $RootPath . '/Confirm_Invoice.php?OrderNumber=' . urlencode($MyRow['orderno']);
 			$PrintPickList = '';
 			$PrintPickLabel = '';
 			$PrintDummyFlag = '<input type="hidden" name="dummy" value="%s" />';
